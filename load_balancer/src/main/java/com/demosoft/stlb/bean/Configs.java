@@ -13,4 +13,8 @@ import javax.servlet.http.HttpSessionListener;
 @Configuration
 @ImportResource({"appConfigs.xml"})
 public class Configs {
+
+    boolean debugMode = false;
+
+
 }
