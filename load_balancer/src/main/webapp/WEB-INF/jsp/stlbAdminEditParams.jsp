@@ -10,7 +10,7 @@
 <H1><a href="/stlb">Admin</a>:<a href="/stlb/config">Configs</a>:edit config [${configName}]</H1>
 
 <h3>${configName} - ${configType}</h3>
-
+${configName} : ${configValue}
 <form:form action="editConfig" method="post" commandName="configChangingBean" >
     <c:choose>
         <c:when test="${configType eq 'java.lang.Boolean'}">
