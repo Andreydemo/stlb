@@ -1,11 +1,10 @@
 package com.demosoft.stlb.bean;
 
-import com.demosoft.stlb.bean.listener.SessionCreationListener;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.ImportResource;
 
-import javax.servlet.http.HttpSessionListener;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by Andrii_Korkoshko on 17.09.2015.
@@ -14,7 +13,24 @@ import javax.servlet.http.HttpSessionListener;
 @ImportResource({"appConfigs.xml"})
 public class Configs {
 
-    boolean debugMode = false;
 
+    public static final String DEBUG_MODE = "debugMode";
 
+    Map<String, Object> configMap = new HashMap<>();
+
+    public Configs() {
+        configMap.put(DEBUG_MODE, Boolean.FALSE);
+    }
+
+    public Boolean isDebugMode() {
+        return (Boolean) configMap.get(DEBUG_MODE);
+    }
+
+    public void setDebugMode(Boolean debugMode) {
+        configMap.put(DEBUG_MODE, debugMode);
+    }
+
+    public Map<String, Object> getConfigMap() {
+        return configMap;
+    }
 }

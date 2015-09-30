@@ -7,28 +7,9 @@
     </head>
     <body>
         <H1>Admin</H1>
-        Available Nodes :
         <ul>
-                <c:forEach items="${availableNodes}" var="node">
-                    <li>
-                            ${node.url}
-                            <c:choose>
-                                    <c:when test="${node.available}">
-                                            <figure class="green-circle"></figure>
-                                    </c:when>
-                                    <c:otherwise>
-                                            <figure class="red-circle"></figure>
-                                    </c:otherwise>
-                            </c:choose>
-                            <form action="/stlb/removeNode" method="post" class="inline-form">
-                                        <input type="hidden" value="${node.url}" name="deletingUrl"/>
-                                        <input type="submit" value="remove">
-                            </form>
-                    </li>
-                </c:forEach>
+                <li><a href="/stlb/viewNodes"> View Nodes</a></li>
+                <li><a href="/stlb/config">Configurations</a></li>
         </ul>
-        <form action="/stlb/removeNode" method="get" >
-                <input type="submit" value="Add node">
-        </form>
     </body>
 </html>
