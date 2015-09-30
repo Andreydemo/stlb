@@ -20,22 +20,32 @@ public class NodeConfigsConteiner {
     @Value("#{'${nodesUrls}'.split(',')}")
     private List<String> nodesUrls = new ArrayList<>();
 
-    private List<Node> availableNodes = new ArrayList<>();
+    private List<Node> nodes = new ArrayList<>();
 
 
     @PostConstruct
     private void init() {
         for (String url : nodesUrls) {
-            availableNodes.add(new Node(url));
+            nodes.add(new Node(url));
         }
-        log.info("available Nodes: {}",availableNodes);
+        log.info("available Nodes: {}", nodes);
     }
 
-    public List<Node> getAvailableNodes() {
-        return availableNodes;
+    public List<Node> getNodes() {
+        return nodes;
     }
 
-    public void setAvailableNodes(List<Node> availableNodes) {
-        this.availableNodes = availableNodes;
+    public List<Node> getAvailbleNodes() {
+        List<Node> availbleNodes = new ArrayList<>();
+        for (Node node : nodes) {
+            if (node.isAvailable()) {
+                availbleNodes.add(node);
+            }
+        }
+        return availbleNodes;
+    }
+
+    public void setNodes(List<Node> nodes) {
+        this.nodes = nodes;
     }
 }

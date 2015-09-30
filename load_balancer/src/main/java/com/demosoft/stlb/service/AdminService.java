@@ -23,13 +23,13 @@ public class AdminService {
 
     public void getAdminPage(Model model) {
         updateNodeStatuses();
-        model.addAttribute(AdminPageDataModel.AVAILABLE_NODES, nodeConfigsConteiner.getAvailableNodes());
+        model.addAttribute(AdminPageDataModel.AVAILABLE_NODES, nodeConfigsConteiner.getNodes());
     }
 
     private void updateNodeStatuses() {
-        for (Node node : nodeConfigsConteiner.getAvailableNodes()) {
+        for (Node node : nodeConfigsConteiner.getNodes()) {
             try {
-                synchronized (nodeConfigsConteiner.getAvailableNodes()) {
+                synchronized (nodeConfigsConteiner.getNodes()) {
                     HttpStatus status = loadBalancerHelper.get(node.getUrl()).getStatusCode();
                     node.setAvailable(status.is2xxSuccessful());
                 }
@@ -41,21 +41,23 @@ public class AdminService {
 
     public void remodeNode(String url) {
         Node reqestedForDeletion = null;
-        synchronized (nodeConfigsConteiner.getAvailableNodes()) {
-            for (Node node : nodeConfigsConteiner.getAvailableNodes()) {
+        synchronized (nodeConfigsConteiner.getNodes()) {
+            for (Node node : nodeConfigsConteiner.getNodes()) {
                 if (node.getUrl().equalsIgnoreCase(url)) {
                     reqestedForDeletion = node;
                 }
             }
             if (reqestedForDeletion != null) {
-                nodeConfigsConteiner.getAvailableNodes().remove(reqestedForDeletion);
+                nodeConfigsConteiner.getNodes().remove(reqestedForDeletion);
+                reqestedForDeletion.setAvailable(false);
             }
         }
     }
 
     public void addNode(String url) {
-        synchronized (nodeConfigsConteiner.getAvailableNodes()) {
-            nodeConfigsConteiner.getAvailableNodes().add(new Node(url));
+        System.out.println("Adding node with url:" + url);
+        synchronized (nodeConfigsConteiner.getNodes()) {
+            nodeConfigsConteiner.getNodes().add(new Node(url));
         }
         updateNodeStatuses();
     }
