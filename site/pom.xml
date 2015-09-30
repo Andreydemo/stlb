@@ -14,14 +14,17 @@
     <artifactId>site</artifactId>
     <packaging>jar</packaging>
     <version>1.0</version>
+    <properties>
+        <start-class>stlb.Application</start-class>
+    </properties>
 
-   <!-- <dependencies>
-        <dependency>
-            <groupId>stlb</groupId>
-            <artifactId>load_balancer</artifactId>
-            <version>1.0</version>
-        </dependency>
-    </dependencies>-->
+    <!-- <dependencies>
+         <dependency>
+             <groupId>stlb</groupId>
+             <artifactId>load_balancer</artifactId>
+             <version>1.0</version>
+         </dependency>
+     </dependencies>-->
 
     <build>
         <resources>

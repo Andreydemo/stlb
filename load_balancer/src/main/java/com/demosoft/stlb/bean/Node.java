@@ -6,6 +6,7 @@ package com.demosoft.stlb.bean;
 public class Node {
 
     private String url;
+    private boolean available = false;
 
     public Node() {
     }
@@ -20,6 +21,14 @@ public class Node {
 
     public void setUrl(String url) {
         this.url = url;
+    }
+
+    public boolean isAvailable() {
+        return available;
+    }
+
+    public void setAvailable(boolean available) {
+        this.available = available;
     }
 
     @Override

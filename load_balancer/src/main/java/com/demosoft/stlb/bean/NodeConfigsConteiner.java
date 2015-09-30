@@ -30,4 +30,12 @@ public class NodeConfigsConteiner {
         }
         log.info("available Nodes: {}",availableNodes);
     }
+
+    public List<Node> getAvailableNodes() {
+        return availableNodes;
+    }
+
+    public void setAvailableNodes(List<Node> availableNodes) {
+        this.availableNodes = availableNodes;
+    }
 }
