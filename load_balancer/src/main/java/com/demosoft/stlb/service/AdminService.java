@@ -26,7 +26,7 @@ public class AdminService {
         model.addAttribute(AdminPageDataModel.AVAILABLE_NODES, nodeConfigsConteiner.getNodes());
     }
 
-    private void updateNodeStatuses() {
+    public void updateNodeStatuses() {
         for (Node node : nodeConfigsConteiner.getNodes()) {
             try {
                 synchronized (nodeConfigsConteiner.getNodes()) {

@@ -11,7 +11,8 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter
 public class STLBWebMvcConfigurerAdapter extends WebMvcConfigurerAdapter {
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        super.addResourceHandlers(registry);
+        registry.setOrder(Integer.MIN_VALUE);
         registry.addResourceHandler("/stlb/css/**").addResourceLocations("/WEB-INF/css/");
+        super.addResourceHandlers(registry);
     }
 }

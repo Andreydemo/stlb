@@ -3,10 +3,12 @@ package com.demosoft.stlb.loadbalancer;
 import com.demosoft.stlb.bean.Node;
 import com.demosoft.stlb.bean.NodeConfigsConteiner;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestTemplate;
+
+import java.util.Arrays;
 
 /**
  * Created by Andrii_Korkoshko on 17.09.2015.
@@ -25,7 +27,11 @@ public class LoadBalancerHelper {
     }
 
     public ResponseEntity<String> get(String url) throws ResourceAccessException {
-        ResponseEntity<String> response = restTemplate.<String>getForEntity(url, String.class);
+        HttpHeaders headers = new HttpHeaders();
+        headers.setAccept(Arrays.asList(MediaType.TEXT_HTML));
+        headers.setContentType(MediaType.TEXT_HTML);
+        HttpEntity<String> entity = new HttpEntity<String>("parameters", headers);
+        ResponseEntity<String> response =  restTemplate.exchange(url, HttpMethod.GET, entity, String.class);
         return response;
     }
 

@@ -11,6 +11,9 @@ import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.context.web.SpringBootServletInitializer;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.ComponentScan;
+import org.springframework.web.servlet.handler.SimpleUrlHandlerMapping;
+
+import java.util.Arrays;
 
 @SpringBootApplication
 @ComponentScan
@@ -25,9 +28,17 @@ public class BalancerApplication extends SpringBootServletInitializer {
     public static void main(String[] args) {
         ApplicationContext ctx = SpringApplication.run(BalancerApplication.class, args);
 
-        System.out.println("Let's inspect the beans provided by Spring Boot:");
+        SimpleUrlHandlerMapping r = ctx.getBean("resourceHandlerMapping",SimpleUrlHandlerMapping.class);
+        SimpleUrlHandlerMapping faviconHandlerMapping = ctx.getBean("faviconHandlerMapping",SimpleUrlHandlerMapping.class);
+        System.out.println(faviconHandlerMapping.getOrder());
+        System.out.println(faviconHandlerMapping.getUrlMap());
+        System.out.println(r.getOrder());
+        System.out.println(" ->" + r.getUrlMap().remove("/**"));
+        System.out.println(r.getUrlMap());
 
-      /*  String[] beanNames = ctx.getBeanDefinitionNames();
+        /*System.out.println("Let's inspect the beans provided by Spring Boot:");
+
+        String[] beanNames = ctx.getBeanDefinitionNames();
         Arrays.sort(beanNames);
         for (String beanName : beanNames) {
             System.out.println(beanName);
