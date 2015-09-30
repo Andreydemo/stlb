@@ -5,6 +5,7 @@ import com.demosoft.stlb.loadbalancer.LoadBalancerHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -28,8 +29,8 @@ public class MainComtroller {
     SessionConnection sessionConnection;
 
     @RequestMapping(value = "/stlb", method = RequestMethod.GET)
-    private String balancerAdmin(HttpSession session, HttpServletRequest request, Map<String, Object> model) {
-        System.out.println("admin Congigs");
+    private String balancerAdmin(Model m) {
+        System.out.println("admin Congigs11");
         return "stlbAdmin";
     }
 

@@ -7,6 +7,7 @@
     <properties>
         <maven.compiler.testTarget>1.8</maven.compiler.testTarget>
         <maven.compiler.testSource>1.8</maven.compiler.testSource>
+        <start-class>com.demosoft.stlb.BalancerApplication</start-class>
     </properties>
 
     <parent>
@@ -15,21 +16,46 @@
         <version>1.0</version>
     </parent>
     <groupId>stlb</groupId>
+    <packaging>war</packaging>
     <artifactId>load_balancer</artifactId>
-    <packaging>jar</packaging>
     <version>1.0</version>
+    <dependencies>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-tomcat</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.tomcat.embed</groupId>
+            <artifactId>tomcat-embed-jasper</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>jstl</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
 
     <build>
         <resources>
-        <!-- regular resource processsing for everything except logback.xml -->
-        <resource>
-            <directory>src/main/resources/config</directory>
-            <includes>
-                <include>appConfigs.xml</include>
-                <include>InitilaNodes.properties</include>
-                <include>application.properties</include>
-            </includes>
-        </resource>
+            <!-- regular resource processsing for everything except logback.xml -->
+            <resource>
+                <directory>src/main/resources/config</directory>
+                <includes>
+                    <include>appConfigs.xml</include>
+                    <include>InitilaNodes.properties</include>
+                    <include>application.properties</include>
+                </includes>
+            </resource>
         </resources>
         <plugins>
             <plugin>

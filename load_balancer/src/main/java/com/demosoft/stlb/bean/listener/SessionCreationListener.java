@@ -13,7 +13,7 @@ import javax.servlet.http.HttpSessionListener;
 /**
  * Created by Andrii_Korkoshko on 17.09.2015.
  */
-@Component
+//@Component
 public class SessionCreationListener implements HttpSessionListener {
 
     private final Logger log = LoggerFactory.getLogger(this.getClass());

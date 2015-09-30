@@ -3,14 +3,24 @@ package com.demosoft.stlb;
 /**
  * Created by Andrii_Korkoshko on 17.09.2015.
  */
-import java.util.Arrays;
 
 import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.builder.SpringApplicationBuilder;
+import org.springframework.boot.context.web.SpringBootServletInitializer;
 import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.ComponentScan;
 
 @SpringBootApplication
-public class BalancerApplication {
+@ComponentScan
+@EnableAutoConfiguration
+public class BalancerApplication extends SpringBootServletInitializer {
+
+    @Override
+    protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
+        return application.sources(BalancerApplication.class);
+    }
 
     public static void main(String[] args) {
         ApplicationContext ctx = SpringApplication.run(BalancerApplication.class, args);
