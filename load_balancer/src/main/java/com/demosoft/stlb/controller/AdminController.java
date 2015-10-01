@@ -33,7 +33,7 @@ public class AdminController {
     @RequestMapping(value = "/removeNode", method = RequestMethod.POST)
     private String removeNode(@RequestParam("deletingUrl") String deletingUrl, Model m) {
         adminService.remodeNode(deletingUrl);
-        return "redirect:/stlb";
+        return "redirect:viewNodes";
     }
 
     @RequestMapping(value = "/addNode", method = RequestMethod.GET)

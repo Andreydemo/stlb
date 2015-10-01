@@ -28,14 +28,6 @@ public class BalancerApplication extends SpringBootServletInitializer {
     public static void main(String[] args) {
         ApplicationContext ctx = SpringApplication.run(BalancerApplication.class, args);
 
-        SimpleUrlHandlerMapping r = ctx.getBean("resourceHandlerMapping",SimpleUrlHandlerMapping.class);
-        SimpleUrlHandlerMapping faviconHandlerMapping = ctx.getBean("faviconHandlerMapping",SimpleUrlHandlerMapping.class);
-        System.out.println(faviconHandlerMapping.getOrder());
-        System.out.println(faviconHandlerMapping.getUrlMap());
-        System.out.println(r.getOrder());
-        System.out.println(" ->" + r.getUrlMap().remove("/**"));
-        System.out.println(r.getUrlMap());
-
         /*System.out.println("Let's inspect the beans provided by Spring Boot:");
 
         String[] beanNames = ctx.getBeanDefinitionNames();

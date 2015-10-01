@@ -3,6 +3,8 @@ package com.demosoft.stlb.controller;
 import com.demosoft.stlb.bean.Configs;
 import com.demosoft.stlb.bean.SessionConnection;
 import com.demosoft.stlb.loadbalancer.LoadBalancerHelper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.http.MediaType;
@@ -33,10 +35,11 @@ public class MainComtroller {
     @Autowired
     Configs configs;
 
+    private final Logger log = LoggerFactory.getLogger(this.getClass());
+
     @RequestMapping(value = "/**", method = RequestMethod.GET )
     @ResponseBody
     private String processRequest(HttpSession session, HttpServletRequest request) throws ResourceAccessException {
-        System.out.printf( request.getHeader("Accept"));
         checkSessionConection(session);
         String response = loadBalancerHelper.get(sessionConnection.getNode().getUrl()).getBody();
         return generateResponseHtml(request,response);
@@ -46,6 +49,8 @@ public class MainComtroller {
         sessionConnection.setjSessionId(session.getId());
         if (sessionConnection.getNode() == null || !sessionConnection.getNode().isAvailable()) {
             sessionConnection.setNode(loadBalancerHelper.getAvailibleNode());
+            log.info("Node {} was given to {}",sessionConnection.getNode().getUrl(),sessionConnection.getjSessionId());
+            log.info("Node {} has  {} connections {}",sessionConnection.getNode().getUrl(),sessionConnection.getNode().getConnectionCount(), sessionConnection.getNode().getConnections());
         }
     }
 

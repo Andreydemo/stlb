@@ -1,5 +1,9 @@
 package com.demosoft.stlb.bean;
 
+import java.lang.ref.WeakReference;
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Created by Andrii_Korkoshko on 17.09.2015.
  */
@@ -7,6 +11,8 @@ public class Node {
 
     private String url;
     private boolean available = false;
+
+    private List<WeakReference<SessionConnection>> connections = new ArrayList<WeakReference<SessionConnection>>();
 
     public Node() {
     }
@@ -36,5 +42,29 @@ public class Node {
         return "Node{" +
                 "url='" + url + '\'' +
                 '}';
+    }
+
+    public void addConnection(SessionConnection connection) {
+        filterConncections();
+        connections.add(new WeakReference<SessionConnection>(connection));
+    }
+
+    public int getConnectionCount(){
+        filterConncections();
+       return connections.size();
+    }
+    public List<WeakReference<SessionConnection>> getConnections(){
+        filterConncections();
+        return connections;
+    }
+
+    public void filterConncections(){
+        List<WeakReference<SessionConnection>> removingList = new ArrayList<>();
+        for (WeakReference<SessionConnection> ref : connections){
+            if(ref.get() == null || ref.get().getExpired()){
+                removingList.add(ref);
+            }
+        }
+        connections.removeAll(removingList);
     }
 }
