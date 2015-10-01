@@ -41,7 +41,7 @@ public class MainComtroller {
     @ResponseBody
     private String processRequest(HttpSession session, HttpServletRequest request) throws ResourceAccessException {
         checkSessionConection(session);
-        String response = loadBalancerHelper.get(sessionConnection.getNode().getUrl()).getBody();
+        String response = loadBalancerHelper.get(sessionConnection.getNode().getUrl(),request.getRequestURI()).getBody();
         return generateResponseHtml(request,response);
     }
 
@@ -65,15 +65,5 @@ public class MainComtroller {
         return response;
     }
 
-    private String getRletivePath(String url){
-        String pattern = "^((http[s]?|ftp):\\/\\/)?\\/?([^\\/\\.]+\\.)*?([^\\/\\.]+\\.[^:\\/\\s\\.]{2,3}(\\.[^:\\/\\s\\.]\u200C\u200B{2,3})?)(:\\d+)?($|\\/)([^#?\\s]+)?(.*?)?(#[\\w\\-]+)?$";
-        Pattern r = Pattern.compile(pattern);
-        Matcher m = r.matcher(url);
-        if (m.find( )) {
-            return m.group(8);
-        } else {
-            System.out.println("NO MATCH");
-        }
-        return "";
-    }
+
 }

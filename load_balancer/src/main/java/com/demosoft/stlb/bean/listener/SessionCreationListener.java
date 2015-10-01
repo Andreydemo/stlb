@@ -35,7 +35,7 @@ public class SessionCreationListener implements HttpSessionListener {
             conncetion.setExpired(true);
             sessionRegistry.remove(jSessionId);
         } else {
-            log.info("Connection with Session if {} is not exist in SessionRegistry " + jSessionId);
+            log.info("Connection with Session if {} is not exist in SessionRegistry ", jSessionId);
         }
     }
 

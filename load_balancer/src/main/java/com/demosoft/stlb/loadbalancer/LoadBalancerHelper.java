@@ -30,13 +30,17 @@ public class LoadBalancerHelper {
         return restTemplate.<Object>postForEntity(url, request, Object.class);
     }
 
-    public ResponseEntity<String> get(String url) throws ResourceAccessException {
+    public ResponseEntity<String> get(String url, String path) throws ResourceAccessException {
         HttpHeaders headers = new HttpHeaders();
         headers.setAccept(Arrays.asList(MediaType.TEXT_HTML));
         headers.setContentType(MediaType.TEXT_HTML);
         HttpEntity<String> entity = new HttpEntity<String>("parameters", headers);
-        ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.GET, entity, String.class);
+        ResponseEntity<String> response = restTemplate.exchange(url + path, HttpMethod.GET, entity, String.class);
         return response;
+    }
+
+    public ResponseEntity<String> get(String url) throws ResourceAccessException {
+        return get(url, "");
     }
 
     public Node getAvailibleNode() {

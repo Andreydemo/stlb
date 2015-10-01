@@ -60,8 +60,8 @@ public class AdminService {
             nodeConfigsConteiner.getNodes().add(new Node(url));
         }
         System.out.println("Added node with url:" + url);
+        log.info("Added node with url: {}", url);
         updateNodeStatuses();
-        System.out.println("statuses updated");
     }
 
     class UpdateStatusTask implements Runnable {
