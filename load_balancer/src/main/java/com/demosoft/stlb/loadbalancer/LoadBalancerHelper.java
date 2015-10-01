@@ -3,16 +3,18 @@ package com.demosoft.stlb.loadbalancer;
 import com.demosoft.stlb.bean.Node;
 import com.demosoft.stlb.bean.NodeConfigsConteiner;
 import com.demosoft.stlb.bean.SessionConnection;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
 import org.springframework.stereotype.Component;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestTemplate;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 /**
  * Created by Andrii_Korkoshko on 17.09.2015.
@@ -23,6 +25,8 @@ public class LoadBalancerHelper {
     public static final String JSESSIONID = "JSESSIONID";
     public static final String SET_COOKIE = "Set-cookie";
     public static final String COOKIE = "Cookie";
+
+    private final Logger log = LoggerFactory.getLogger(this.getClass());
 
 
     @Autowired
@@ -44,9 +48,39 @@ public class LoadBalancerHelper {
         putCorrectSessionIdToHeadrs(headers, connection);
         HttpEntity<String> entity = new HttpEntity<String>("parameters", headers);
         ResponseEntity<String> response = restTemplate.exchange(connection.getNode().getUrl() + httpRequest.getRequestURI(), HttpMethod.GET, entity, String.class);
-        System.out.println(response.getHeaders().get("Set-cookie"));
-        processJSessionIdAfterRequest(response,connection);
+        processJSessionIdAfterRequest(response, connection);
         return response;
+    }
+
+    public ResponseEntity<String> post(HttpServletRequest httpRequest, SessionConnection connection) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.setAccept(Arrays.asList(MediaType.TEXT_HTML));
+        //headers.setContentType(MediaType.TEXT_HTML);
+        headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+       // headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+        putCorrectSessionIdToHeadrs(headers, connection);
+
+        MultiValueMap<String, String> body = new LinkedMultiValueMap<String, String>();
+
+        body.setAll(compilePostParamMap(httpRequest.getParameterMap()));
+        //TODO checkboxes ignored
+        body.add("field", "value");
+
+        HttpEntity<?> entity = new HttpEntity<Object>(body, headers);
+
+        ResponseEntity<String> response = restTemplate.exchange(connection.getNode().getUrl() + httpRequest.getRequestURI(), HttpMethod.POST, entity, String.class);
+        processJSessionIdAfterRequest(response, connection);
+        log.info(response.getHeaders().toString());
+        log.info(response.getBody());
+        return response;
+    }
+
+    private Map<String,String> compilePostParamMap(Map<String,String[]> reqestParamMap){
+        Map<String,String> compiledReqestParamMap = new HashMap<>();
+        for (Map.Entry<String,String[]> entry : reqestParamMap.entrySet()){
+            compiledReqestParamMap.put(entry.getKey(),entry.getValue()[0]);
+        }
+        return  compiledReqestParamMap;
     }
 
     public ResponseEntity<String> get(String url) throws ResourceAccessException {
@@ -83,9 +117,7 @@ public class LoadBalancerHelper {
         }
     }
 
-    public static void main(String[] args) {
-        System.out.println(Arrays.toString("JSESSIONID=05B8388D40FB2A26BDE9A023282D22CC; Path=/; HttpOnly".split(";")));
-    }
+
 
     private void putCorrectSessionIdToHeadrs(HttpHeaders headers, SessionConnection connection) {
         if (connection.getNodeJSessionId() == null) {

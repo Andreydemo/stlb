@@ -36,9 +36,17 @@ public class MainComtroller {
 
     @RequestMapping(value = "/**", method = RequestMethod.GET)
     @ResponseBody
-    private String processRequest(HttpSession session, HttpServletRequest request) throws ResourceAccessException {
+    private String processGetRequest(HttpSession session, HttpServletRequest request) throws ResourceAccessException {
         checkSessionConection(session);
         String response = loadBalancerHelper.get(request, sessionConnection).getBody();
+        return generateResponseHtml(request, response);
+    }
+
+    @RequestMapping(value = "/**", method = RequestMethod.POST)
+    @ResponseBody
+    private String processPostRequest(HttpSession session, HttpServletRequest request) throws ResourceAccessException {
+        checkSessionConection(session);
+        String response = loadBalancerHelper.post(request, sessionConnection).getBody();
         return generateResponseHtml(request, response);
     }
 
