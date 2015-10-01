@@ -17,6 +17,7 @@ public class SessionConnection {
 
     private Node node;
     private String jSessionId;
+    private String nodeJSessionId;
     private Boolean expired = false;
 
     public Node getNode() {
@@ -43,5 +44,13 @@ public class SessionConnection {
 
     public void setExpired(Boolean expired) {
         this.expired = expired;
+    }
+
+    public String getNodeJSessionId() {
+        return nodeJSessionId;
+    }
+
+    public void setNodeJSessionId(String nodeJSessionId) {
+        this.nodeJSessionId = nodeJSessionId;
     }
 }
