@@ -1,4 +1,5 @@
 body {
+
     background-color: lightblue;
 }
 h1 {
@@ -35,4 +36,49 @@ h1 {
 }
 .inline-form{
 display: inline-block;
+}
+/*New*/
+
+/* Page */
+body {
+    background: #abebff;
+    font: 16px "Helvetica Neue", sans-serif;
+}
+h1 {
+    margin: auto;
+}
+a {
+    text-decoration: none;
+}
+
+/* Top bar */
+#topbar {
+    background: #fff;
+    padding: 1em;
+    margin-bottom: 2em;
+}
+.title {
+    color: #363636;
+}
+
+/* Content */
+#content{
+    background: #fff;
+    max-width: 50%;
+    margin: 0 auto;
+}
+#main-nav {
+
+}
+#main-nav a {
+    display: block;
+    padding: 1em;
+    color: #363636;
+}
+#main-nav a:hover{
+    background: #1f9ac0;
+    color: #fff;
+}
+#main-nav a:not(:last-child){
+    border-bottom: 1px solid #e5e5e5;
 }

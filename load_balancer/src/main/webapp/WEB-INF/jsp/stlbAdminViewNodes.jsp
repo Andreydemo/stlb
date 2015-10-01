@@ -3,32 +3,47 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <link rel="stylesheet" type="text/css" href="/stlb/css/style.css">
+        <title>Admin | View Nodes</title>
+        <link rel="stylesheet" type="text/css" href="/stlb/bower_components/normalize-css/normalize.css"/>
+        <link rel="stylesheet" type="text/css" href="/stlb/bower_components/semantic/dist/semantic.css"/>
     </head>
     <body>
-        <H1><a href="/stlb">Admin</a>:View Nodes</H1>
-        Available Nodes :
-        <ul>
-                <c:forEach items="${availableNodes}" var="node">
-                    <li>
-                            ${node.url}
-                            <c:choose>
-                                    <c:when test="${node.available}">
-                                            <figure class="green-circle"></figure>
-                                    </c:when>
-                                    <c:otherwise>
-                                            <figure class="red-circle"></figure>
-                                    </c:otherwise>
-                            </c:choose>
-                            <form action="/stlb/removeNode" method="post" class="inline-form">
-                                        <input type="hidden" value="${node.url}" name="deletingUrl"/>
-                                        <input type="submit" value="remove">
+        <main class="ui container">
+            <div class="ui stackable inverted container menu">
+                <a href="/stlb" class="item">Admin</a>
+                <a href="/stlb/viewNodes" class="item">View Nodes</a>
+                <a href="/stlb/config" class="item">Configurations</a>
+            </div>
+            <section id="content" class="ui segment">
+                <h3 class="ui medium header">Available Nodes :</h3>
+                <div class="ui middle aligned divided list">
+                    <c:forEach items="${availableNodes}" var="node">
+                        <div class="item">
+                            <form action="/stlb/removeNode" method="post" class="right floated content">
+                                <input type="hidden" value="${node.url}" name="deletingUrl"/>
+                                <button type="submit" class="ui icon button">
+                                    <i class="remove icon"></i>
+                                </button>
                             </form>
-                    </li>
-                </c:forEach>
-        </ul>
-        <form action="/stlb/addNode" method="get" >
-                <input type="submit" value="Add node">
-        </form>
+                            <c:choose>
+                                <c:when test="${node.available}">
+                                    <i class="circular plug icon inverted green"></i>
+                                </c:when>
+                                <c:otherwise>
+                                    <i class="circular plug icon inverted red"></i>
+                                </c:otherwise>
+                            </c:choose>
+                            <div class="content">
+                                ${node.url}
+                            </div>
+                        </div>
+                    </c:forEach>
+                </div>
+                <form action="/stlb/addNode" method="get" >
+                    <input type="submit" value="Add node" class="teal ui button">
+                </form>
+            </section>
+        </main>
     </body>
+    <script type="javascript" src="/stlb/bower_components/semantic/dist/semantic.js"/>
 </html>

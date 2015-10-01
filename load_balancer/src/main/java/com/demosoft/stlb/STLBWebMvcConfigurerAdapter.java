@@ -15,6 +15,8 @@ public class STLBWebMvcConfigurerAdapter extends WebMvcConfigurerAdapter {
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         registry.setOrder(-1);
         registry.addResourceHandler("/stlb/css/**").addResourceLocations("/WEB-INF/css/");
+		registry.addResourceHandler("/stlb/js/**").addResourceLocations("/WEB-INF/js/");
+		registry.addResourceHandler("/stlb/bower_components/**/*").addResourceLocations("/WEB-INF/bower_components/");
         super.addResourceHandlers(registry);
     }
 }

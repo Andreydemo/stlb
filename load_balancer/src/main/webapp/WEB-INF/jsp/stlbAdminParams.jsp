@@ -3,17 +3,40 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <link rel="stylesheet" type="text/css" href="/stlb/css/style.css">
+        <title>Admin | Add Node</title>
+        <link rel="stylesheet" type="text/css" href="/stlb/bower_components/normalize-css/normalize.css"/>
+        <link rel="stylesheet" type="text/css" href="/stlb/bower_components/semantic/dist/semantic.css"/>
     </head>
     <body>
-        <H1><a href="/stlb">Admin</a>:Configs</H1>
-      <table border="1">
-          <th>Name</th><th>Value</th>
-            <c:forEach items="${configs}" var="config">
-                <tr>
-               <td><a href="/stlb/editConfig?configName=${config.key}">${config.key}</a></td><td>${config.value}</td>
-                </tr>
-            </c:forEach>
-      </table>
+        <main class="ui container">
+            <div class="ui stackable inverted container menu">
+                <a href="/stlb" class="item">Admin</a>
+                <a href="/stlb/viewNodes" class="item">View Nodes</a>
+                <a href="/stlb/config" class="item">Configurations</a>
+            </div>
+            <div class="ui large breadcrumb">
+                <a href="/stlb">Admin</a>
+                <i class="right chevron icon divider"></i>
+                <div class="active section">Configs</div>
+            </div>
+            <section id="content" class="ui vertical segment">
+              <table class="ui striped right aligned table">
+                <thead>
+                    <th class="left aligned">Name</th>
+                    <th>Value</th>
+                </thead>
+                <tbody>
+                    <c:forEach items="${configs}" var="config">
+                        <tr>
+                            <td class="left aligned">
+                                <a href="/stlb/editConfig?configName=${config.key}">${config.key}</a>
+                            </td>
+                            <td>${config.value}</td>
+                        </tr>
+                    </c:forEach>
+                </tbody>
+              </table>
+            </section>
+        </main>
     </body>
 </html>
