@@ -63,6 +63,10 @@
                         </tr>
                     </tbody>
                 </table>
+                <c:if test="${node.connectionsCount > 0}">
+                    <c:forEach items="${node.connections}" var="connection">
+                        ${connection}
+                        </c:forEach>
                 <div class="ui styled fluid accordion">
                     <div class="title">
                         <i class="dropdown icon"></i>
@@ -87,6 +91,7 @@
                         <p class="transition hidden">A pet shop may be the most convenient way to buy a dog. Buying a dog from a private owner allows you to assess the pedigree and upbringing of your dog before choosing to take it home. Lastly, finding your dog from a shelter, helps give a good home to a dog who may not find one so readily.</p>
                     </div>
                 </div>
+                </c:if>
             </section>
         </main>
     </body>
