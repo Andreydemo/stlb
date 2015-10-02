@@ -73,13 +73,18 @@ public class MainComtroller {
 
     private String generateResponseHtml(HttpServletRequest request, String response) {
         if (configs.isDebugMode()) {
-            return "<b>" + request.getRequestURL() + "?" + request.getQueryString() + "</b>" +
-                    "<br>" +
-                    "Node: " + sessionConnection.getNode().getUrl() +
-                    "<br>" +
-                    "Full request url" + sessionConnection.getNode().getUrl() + request.getRequestURI() +
-                    "<br>" +
-                    "Response from node: " + response;
+            return "<link rel=\"stylesheet\" type=\"text/css\" href=\"/stlb/bower_components/normalize-css/normalize.css\"/>\n" +
+                    "        <link rel=\"stylesheet\" type=\"text/css\" href=\"/stlb/bower_components/semantic/dist/semantic.css\"/>" +
+                    "<div class=\"ui message\">\n" +
+                    "<div class=\"header\">" +
+                    "Debug Info" +
+                    "</div>" +
+                    " <ul class=\"list\">" +
+                    "<li>" + request.getRequestURL() + "?" + request.getQueryString() + "</li>" +
+                    "<li>Node: " + sessionConnection.getNode().getUrl() + "</li>" +
+                    "<li>Full request url" + sessionConnection.getNode().getUrl() + request.getRequestURI() + "</li>" +
+                    "</ul>\n" +
+                    "</div>" + response;
         }
         return response;
     }
