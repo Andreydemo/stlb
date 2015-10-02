@@ -11,6 +11,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.ui.Model;
 import org.springframework.web.client.ResourceAccessException;
 
+import java.util.Date;
+
 /**
  * Created by Andrii_Korkoshko on 30.09.2015.
  */
@@ -76,6 +78,9 @@ public class AdminService {
             try {
                 HttpStatus status = loadBalancerHelper.get(node.getUrl()).getStatusCode();
                 node.setAvailable(status.is2xxSuccessful());
+                if(status.is2xxSuccessful()){
+                    node.setLastAvailible(new Date());
+                }
             } catch (ResourceAccessException e) {
                 node.setAvailable(false);
             }

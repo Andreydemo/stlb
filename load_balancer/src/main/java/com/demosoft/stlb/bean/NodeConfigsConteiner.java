@@ -51,6 +51,15 @@ public class NodeConfigsConteiner {
         return availbleNodes;
     }
 
+    public Node getNodeById(String id){
+        for (Node node :nodes){
+            if(node.getNodeId().equals(id)){
+                return  node;
+            }
+        }
+        return null;
+    }
+
     public void setNodes(List<Node> nodes) {
         this.nodes = nodes;
     }

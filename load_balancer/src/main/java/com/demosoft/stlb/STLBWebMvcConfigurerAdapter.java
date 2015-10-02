@@ -1,6 +1,7 @@
 package com.demosoft.stlb;
 
 import org.springframework.stereotype.Component;
+import org.springframework.web.servlet.config.annotation.DefaultServletHandlerConfigurer;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
@@ -18,5 +19,10 @@ public class STLBWebMvcConfigurerAdapter extends WebMvcConfigurerAdapter {
 		registry.addResourceHandler("/stlb/js/**").addResourceLocations("/WEB-INF/js/");
 		registry.addResourceHandler("/stlb/bower_components/**/*").addResourceLocations("/WEB-INF/bower_components/");
         super.addResourceHandlers(registry);
+    }
+
+    @Override
+    public void configureDefaultServletHandling(DefaultServletHandlerConfigurer configurer) {
+        configurer.enable();
     }
 }

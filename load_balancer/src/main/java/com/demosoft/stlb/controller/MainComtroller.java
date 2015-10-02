@@ -7,6 +7,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -14,7 +16,10 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.client.ResourceAccessException;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created by Andrii_Korkoshko on 17.09.2015.
@@ -34,21 +39,28 @@ public class MainComtroller {
 
     private final Logger log = LoggerFactory.getLogger(this.getClass());
 
-    @RequestMapping(value = "/**", method = RequestMethod.GET)
+    @RequestMapping( method = RequestMethod.GET)
     @ResponseBody
     private String processGetRequest(HttpSession session, HttpServletRequest request) throws ResourceAccessException {
         checkSessionConection(session);
+        request.getServletContext().getServletRegistrations();
+        log.info("GET call for {} node for path {}",sessionConnection.getNode().getUrl(), request.getRequestURI());
         String response = loadBalancerHelper.get(request, sessionConnection).getBody();
         return generateResponseHtml(request, response);
     }
 
     @RequestMapping(value = "/**", method = RequestMethod.POST)
     @ResponseBody
-    private String processPostRequest(HttpSession session, HttpServletRequest request) throws ResourceAccessException {
+    private String processPostRequest(HttpSession session, HttpServletRequest request, HttpServletResponse httpServletResponse) throws ResourceAccessException {
         checkSessionConection(session);
-        String response = loadBalancerHelper.post(request, sessionConnection).getBody();
+        ResponseEntity<String> responseEntity = loadBalancerHelper.post(request, sessionConnection);
+        String response = responseEntity.getBody();
+        loadBalancerHelper. compileHttpPostHeader(request,httpServletResponse, responseEntity.getHeaders());
+        httpServletResponse.setStatus(responseEntity.getStatusCode().value());
         return generateResponseHtml(request, response);
     }
+
+
 
     private void checkSessionConection(HttpSession session) {
         sessionConnection.setjSessionId(session.getId());
@@ -64,6 +76,8 @@ public class MainComtroller {
             return "<b>" + request.getRequestURL() + "?" + request.getQueryString() + "</b>" +
                     "<br>" +
                     "Node: " + sessionConnection.getNode().getUrl() +
+                    "<br>" +
+                    "Full request url" + sessionConnection.getNode().getUrl() + request.getRequestURI() +
                     "<br>" +
                     "Response from node: " + response;
         }

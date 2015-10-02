@@ -2,11 +2,14 @@ package com.demosoft.stlb.controller;
 
 import com.demosoft.stlb.bean.ConfigChangingBean;
 import com.demosoft.stlb.bean.Configs;
+import com.demosoft.stlb.bean.Node;
+import com.demosoft.stlb.bean.NodeConfigsConteiner;
 import com.demosoft.stlb.service.AdminService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -23,6 +26,9 @@ public class AdminController {
 
     @Autowired
     private Configs configs;
+
+    @Autowired
+    NodeConfigsConteiner nodeConfigsConteiner;
 
     @RequestMapping(value = "", method = RequestMethod.GET)
     private String balancerAdmin(Model m) {
@@ -51,6 +57,13 @@ public class AdminController {
     private String balancerAdminViewNodes(Model m) {
         adminService.getAdminPage(m);
         return "stlbAdminViewNodes";
+    }
+
+    @RequestMapping(value = "/nodeInfo-{nodeId}", method = RequestMethod.GET)
+    private String nodeInfoPage(@PathVariable("nodeId") String nodeId, Model m) {
+        Node node = nodeConfigsConteiner.getNodeById(nodeId);
+        m.addAttribute("node", node);
+        return "stlbAdminNodeInfo";
     }
 
     @RequestMapping(value = "/config", method = RequestMethod.GET)

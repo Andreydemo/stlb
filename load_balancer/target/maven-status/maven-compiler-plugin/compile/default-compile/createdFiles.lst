@@ -4,6 +4,7 @@ com\demosoft\stlb\service\AdminService$UpdateStatusTask.class
 com\demosoft\stlb\bean\SessionConnection.class
 com\demosoft\stlb\service\AdminPageDataModel.class
 com\demosoft\stlb\bean\ConfigChangingBean.class
+com\demosoft\stlb\bean\listener\ContextListener.class
 com\demosoft\stlb\bean\Node.class
 com\demosoft\stlb\BalancerApplication.class
 com\demosoft\stlb\loadbalancer\SessionUtils.class

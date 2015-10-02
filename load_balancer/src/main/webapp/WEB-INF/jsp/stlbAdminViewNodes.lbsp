@@ -14,6 +14,11 @@
                 <a href="/stlb/viewNodes" class="item">View Nodes</a>
                 <a href="/stlb/config" class="item">Configurations</a>
             </div>
+            <div class="ui large breadcrumb">
+                <a href="/stlb">Admin</a>
+                <i class="right chevron icon divider"></i>
+                <div class="active section">View Nodes</div>
+            </div>
             <section id="content" class="ui segment">
                 <h3 class="ui medium header">Available Nodes :</h3>
                 <div class="ui middle aligned divided list">
@@ -34,7 +39,7 @@
                                 </c:otherwise>
                             </c:choose>
                             <div class="content">
-                                ${node.url}
+                               <a href="nodeInfo-${node.nodeId}">${node.url}</a>
                             </div>
                         </div>
                     </c:forEach>

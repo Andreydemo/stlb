@@ -14,7 +14,12 @@ import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestTemplate;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.*;
+
+import static org.springframework.http.HttpHeaders.LOCATION;
 
 /**
  * Created by Andrii_Korkoshko on 17.09.2015.
@@ -57,7 +62,7 @@ public class LoadBalancerHelper {
         headers.setAccept(Arrays.asList(MediaType.TEXT_HTML));
         //headers.setContentType(MediaType.TEXT_HTML);
         headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
-       // headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+        // headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
         putCorrectSessionIdToHeadrs(headers, connection);
 
         MultiValueMap<String, String> body = new LinkedMultiValueMap<String, String>();
@@ -75,12 +80,12 @@ public class LoadBalancerHelper {
         return response;
     }
 
-    private Map<String,String> compilePostParamMap(Map<String,String[]> reqestParamMap){
-        Map<String,String> compiledReqestParamMap = new HashMap<>();
-        for (Map.Entry<String,String[]> entry : reqestParamMap.entrySet()){
-            compiledReqestParamMap.put(entry.getKey(),entry.getValue()[0]);
+    private Map<String, String> compilePostParamMap(Map<String, String[]> reqestParamMap) {
+        Map<String, String> compiledReqestParamMap = new HashMap<>();
+        for (Map.Entry<String, String[]> entry : reqestParamMap.entrySet()) {
+            compiledReqestParamMap.put(entry.getKey(), entry.getValue()[0]);
         }
-        return  compiledReqestParamMap;
+        return compiledReqestParamMap;
     }
 
     public ResponseEntity<String> get(String url) throws ResourceAccessException {
@@ -118,7 +123,6 @@ public class LoadBalancerHelper {
     }
 
 
-
     private void putCorrectSessionIdToHeadrs(HttpHeaders headers, SessionConnection connection) {
         if (connection.getNodeJSessionId() == null) {
             return;
@@ -139,5 +143,49 @@ public class LoadBalancerHelper {
         usedNodes.add(nodes.get(0));
         return nodes.get(0);
     }
+
+    public void compileHttpPostHeader(HttpServletRequest request, HttpServletResponse httpServletResponse, HttpHeaders httpHeaders) {
+        for (Map.Entry<String, List<String>> entry : httpHeaders.entrySet()) {
+
+            switch (entry.getKey()) {
+                case COOKIE:
+                    //TODO cookies will be ignored
+                    break;
+                case LOCATION:
+                    for (String value : entry.getValue()) {
+                        httpServletResponse.addHeader(entry.getKey(), fixLocationHeader(value, request));
+                    }
+                    break;
+                default:
+                    for (String value : entry.getValue()) {
+                        httpServletResponse.addHeader(entry.getKey(), value);
+                    }
+            }
+
+        }
+
+    }
+
+    private String fixLocationHeader(String value, HttpServletRequest request) {
+        try {
+            URI location = new URI(value);
+            URI requestUrl = new URI(request.getRequestURL().toString());
+            String result = value.replace(location.getHost(), requestUrl.getHost());
+            if (location.getPort() != -1) {
+                //TODO port problems
+                result = result.replace(String.valueOf(location.getPort()), String.valueOf(requestUrl.getPort()));
+            }
+            return result;
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+        }
+        String originalUrl = value;
+        String host = originalUrl.substring(originalUrl.indexOf("//") + 2);
+        host = host.substring(0, host.indexOf("/"));
+        originalUrl = originalUrl.replace(host, "localhost");
+        return "";
+    }
+
+
 
 }
