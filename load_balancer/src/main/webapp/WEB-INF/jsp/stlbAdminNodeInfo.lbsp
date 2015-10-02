@@ -21,59 +21,75 @@
                 <i class="right chevron icon divider"></i>
                 <div class="active section">Node Info - ${node.nodeId}</div>
             </div>
-            <section id="content" class="ui segment">
-                <h3 class="ui medium header">
-                    <c:choose>
-                        <c:when test="${node.available}">
-                            <i class="circular plug icon inverted green"></i>
-                        </c:when>
-                        <c:otherwise>
-                            <i class="circular plug icon inverted red"></i>
-                        </c:otherwise>
-                    </c:choose>
-                    ${node.name} :
-                </h3>
-                    <div class="ui middle aligned divided list">
-                    URL : ${node.url}
-                    <br>
-                  Count of active connections :   ${node.connectionsCount}
-                    <br>
-                    Last availability status :
-                        <c:choose>
-                            <c:when test="${not empty node.lastAvailible}">
-                                ${node.lastAvailible}
-                            </c:when>
-                            <c:otherwise>
-                                Never
-                            </c:otherwise>
-                        </c:choose>
-                   <!-- <c:forEach items="${availableNodes}" var="node">
-                        <div class="item">
-                            <form action="/stlb/removeNode" method="post" class="right floated content">
-                                <input type="hidden" value="${node.url}" name="deletingUrl"/>
-                                <button type="submit" class="ui icon button">
-                                    <i class="remove icon"></i>
-                                </button>
-                            </form>
-                            <c:choose>
-                                <c:when test="${node.available}">
-                                    <i class="circular plug icon inverted green"></i>
-                                </c:when>
-                                <c:otherwise>
-                                    <i class="circular plug icon inverted red"></i>
-                                </c:otherwise>
-                            </c:choose>
-                            <div class="content">
-                                ${node.url}
-                            </div>
-                        </div>
-                    </c:forEach>-->
+            <section id="content" class="ui raised segment">
+                <c:choose>
+                    <c:when test="${node.available}">
+                       <c:set var="labelClass" value="green" scope="request"/>
+                    </c:when>
+                    <c:otherwise>
+                        <c:set var="labelClass" value="red"  scope="request"/>
+                    </c:otherwise>
+                </c:choose>
+                <a href="${node.url}" class="ui ${labelClass} ribbon label">
+                    ${node.name}
+                </a>
+                <table class="ui striped right aligned table">
+                    <thead>
+                        <th class="left aligned">Name</th>
+                        <th class="left aligned">Value</th>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td  class="left aligned">URL</td>
+                            <td class="left aligned"> ${node.url}</td>
+                        </tr>
+                        <tr>
+                            <td  class="left aligned">Count of active connections</td>
+                            <td class="left aligned">${node.connectionsCount}</td>
+                        </tr>
+                        <tr>
+                            <td  class="left aligned">Last availability status</td>
+                            <td class="left aligned">
+                                <c:choose>
+                                    <c:when test="${not empty node.lastAvailible}">
+                                        ${node.lastAvailible}
+                                    </c:when>
+                                    <c:otherwise>
+                                        Never
+                                    </c:otherwise>
+                                </c:choose>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div class="ui styled fluid accordion">
+                    <div class="title">
+                        <i class="dropdown icon"></i>
+                        What is a dog?
+                    </div>
+                    <div class="content">
+                        <p class="transition hidden">A dog is a type of domesticated animal. Known for its loyalty and faithfulness, it can be found as a welcome guest in many households across the world.</p>
+                    </div>
+                    <div class="title">
+                        <i class="dropdown icon"></i>
+                        What kinds of dogs are there?
+                    </div>
+                    <div class="content">
+                        <p class="transition hidden">There are many breeds of dogs. Each breed varies in size and temperament. Owners often select a breed of dog that they find to be compatible with their own lifestyle and desires from a companion.</p>
+                    </div>
+                    <div class="title">
+                        <i class="dropdown icon"></i>
+                        How do you acquire a dog?
+                    </div>
+                    <div class="content">
+                        <p class="transition hidden">Three common ways for a prospective owner to acquire a dog is from pet shops, private owners, or shelters.</p>
+                        <p class="transition hidden">A pet shop may be the most convenient way to buy a dog. Buying a dog from a private owner allows you to assess the pedigree and upbringing of your dog before choosing to take it home. Lastly, finding your dog from a shelter, helps give a good home to a dog who may not find one so readily.</p>
+                    </div>
                 </div>
-                <form action="/stlb/addNode" method="get" >
-                    <input type="submit" value="Add node" class="teal ui button">
-                </form>
             </section>
         </main>
     </body>
-    <script type="javascript" src="/stlb/bower_components/semantic/dist/semantic.js"/>
+    <script src="/stlb/bower_components/jquery/dist/jquery.min.js"></script>
+    <script src="/stlb/bower_components/semantic/dist/semantic.js"></script>
+    <script src="/stlb/js/main.js"></script>
 </html>
