@@ -13,6 +13,7 @@
             <a href="/stlb" class="item">Admin</a>
             <a href="/stlb/viewNodes" class="item">View Nodes</a>
             <a href="/stlb/config" class="item">Configurations</a>
+            <a href="/" class="item">Site</a>
         </div>
         <div class="ui large breadcrumb">
             <a href="/stlb">Admin</a>
