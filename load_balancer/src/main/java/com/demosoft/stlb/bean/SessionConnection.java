@@ -5,6 +5,8 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.context.annotation.ScopedProxyMode;
 import org.springframework.stereotype.Component;
 
+import java.util.Date;
+
 /**
  * Created by Andrii_Korkoshko on 17.09.2015.
  */
@@ -19,6 +21,7 @@ public class SessionConnection {
     private String jSessionId;
     private String nodeJSessionId;
     private Boolean expired = false;
+    private Date lastActivity;
 
     public Node getNode() {
         return node;
@@ -52,5 +55,17 @@ public class SessionConnection {
 
     public void setNodeJSessionId(String nodeJSessionId) {
         this.nodeJSessionId = nodeJSessionId;
+    }
+
+    public Date getLastActivity() {
+        return lastActivity;
+    }
+
+    public void setLastActivity(Date lastActivity) {
+        this.lastActivity = lastActivity;
+    }
+
+    public void updateActivity(){
+        this.lastActivity = new Date();
     }
 }

@@ -70,6 +70,15 @@ public class Node {
         return connections;
     }
 
+    public List<SessionConnection> getStrongConnections() {
+        filterConncections();
+        List<SessionConnection> connections = new ArrayList<>();
+        for (WeakReference<SessionConnection> weak: this.connections) {
+            connections.add(weak.get());
+        }
+        return connections;
+    }
+
     public void filterConncections() {
         List<WeakReference<SessionConnection>> removingList = new ArrayList<>();
         for (WeakReference<SessionConnection> ref : connections) {

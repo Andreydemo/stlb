@@ -46,6 +46,7 @@ public class MainComtroller {
         request.getServletContext().getServletRegistrations();
         log.info("GET call for {} node for path {}",sessionConnection.getNode().getUrl(), request.getRequestURI());
         String response = loadBalancerHelper.get(request, sessionConnection).getBody();
+        sessionConnection.updateActivity();
         return generateResponseHtml(request, response);
     }
 
@@ -57,6 +58,7 @@ public class MainComtroller {
         String response = responseEntity.getBody();
         loadBalancerHelper. compileHttpPostHeader(request,httpServletResponse, responseEntity.getHeaders());
         httpServletResponse.setStatus(responseEntity.getStatusCode().value());
+        sessionConnection.updateActivity();
         return generateResponseHtml(request, response);
     }
 
