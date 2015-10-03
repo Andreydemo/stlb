@@ -16,6 +16,13 @@ public class HelloController {
         return "index";
     }
 
+    @RequestMapping("/perf")
+    public String perfIndex(HttpSession session,Model model) {
+        System.out.println("perf");
+        model.addAttribute("sessionId",session.getId());
+        return "index";
+    }
+
     @RequestMapping("/page{number}")
     public String page(@PathVariable String number, Model model) {
         model.addAttribute("number", number);
