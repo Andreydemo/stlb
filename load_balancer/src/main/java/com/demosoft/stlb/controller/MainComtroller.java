@@ -59,6 +59,7 @@ public class MainComtroller {
         loadBalancerHelper. compileHttpPostHeader(request,httpServletResponse, responseEntity.getHeaders());
         httpServletResponse.setStatus(responseEntity.getStatusCode().value());
         sessionConnection.updateActivity();
+        System.out.println(httpServletResponse.getHeader("Set-Cookie"));
         return generateResponseHtml(request, response);
     }
 
