@@ -52,8 +52,8 @@ public class LoadBalancerHelper {
         headers.setContentType(MediaType.TEXT_HTML);
         putCorrectSessionIdToHeadrs(headers, connection);
         HttpEntity<String> entity = new HttpEntity<String>("parameters", headers);
-        System.out.println("COOKIE " +  entity.getHeaders().get(COOKIE));
-        System.out.println("COOKIE " +  entity.getHeaders().get(SET_COOKIE));
+        System.out.println("COOKIE " + entity.getHeaders().get(COOKIE));
+        System.out.println("SER - COOKIE " + entity.getHeaders().get(SET_COOKIE));
         ResponseEntity<String> response = restTemplate.exchange(connection.getNode().getUrl() + httpRequest.getRequestURI(), HttpMethod.GET, entity, String.class);
         processJSessionIdAfterRequest(response, connection);
         return response;
@@ -65,6 +65,7 @@ public class LoadBalancerHelper {
         //headers.setContentType(MediaType.TEXT_HTML);
         headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
         // headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+        preHeadersCompilation(httpRequest,headers);
         putCorrectSessionIdToHeadrs(headers, connection);
 
         MultiValueMap<String, String> body = new LinkedMultiValueMap<String, String>();
@@ -74,12 +75,30 @@ public class LoadBalancerHelper {
         body.add("field", "value");
 
         HttpEntity<?> entity = new HttpEntity<Object>(body, headers);
-        System.out.println("COOKIE " +  entity.getHeaders().get(COOKIE));
+        System.out.println("COOKIE " + entity.getHeaders().get(COOKIE));
         ResponseEntity<String> response = restTemplate.exchange(connection.getNode().getUrl() + httpRequest.getRequestURI(), HttpMethod.POST, entity, String.class);
         processJSessionIdAfterRequest(response, connection);
         log.info(response.getHeaders().toString());
         log.info(response.getBody());
         return response;
+    }
+
+    private void preHeadersCompilation(HttpServletRequest httpReques, HttpHeaders httpHeaders) {
+        Enumeration<String> headerNames = httpReques.getHeaderNames();
+
+        while (headerNames.hasMoreElements()) {
+            String headerName = headerNames.nextElement();
+            Enumeration<String> headerValues =  httpReques.getHeaders(headerName);
+            boolean firtsValue = true;
+            while (headerValues.hasMoreElements()) {
+                String headerValue = headerValues.nextElement();
+                if (firtsValue) {
+                    httpHeaders.set(headerName, headerValue);
+                } else {
+                    httpHeaders.add(headerName, headerValue);
+                }
+            }
+        }
     }
 
     private Map<String, String> compilePostParamMap(Map<String, String[]> reqestParamMap) {
@@ -112,7 +131,7 @@ public class LoadBalancerHelper {
                 for (String cookie : cookies) {
                     if (cookie.contains(JSESSIONID)) {
                         jSessionId = cookie.substring(cookie.indexOf("=") + 1).trim();
-                        System.out.println("new JSESSIONID + " + jSessionId );
+                        System.out.println("new JSESSIONID + " + jSessionId);
                         isJSessionFound = true;
                     }
                 }
@@ -190,7 +209,6 @@ public class LoadBalancerHelper {
         originalUrl = originalUrl.replace(host, "localhost");
         return "";
     }
-
 
 
 }
