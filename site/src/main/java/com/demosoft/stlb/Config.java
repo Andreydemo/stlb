@@ -1,4 +1,4 @@
-package stlb;
+package com.demosoft.stlb;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;

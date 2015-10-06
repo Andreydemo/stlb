@@ -8,37 +8,16 @@
         <artifactId>stlb</artifactId>
         <groupId>stlb</groupId>
         <version>1.0</version>
+        <relativePath>../pom.xml</relativePath>
     </parent>
 
     <groupId>stlb</groupId>
-    <artifactId>site</artifactId>
+    <artifactId>load_balancer_client</artifactId>
     <packaging>jar</packaging>
     <version>1.0</version>
-    <properties>
-        <start-class>com.demosoft.stlb.Application</start-class>
-    </properties>
 
-    <dependencies>
-        <dependency>
-            <groupId>stlb</groupId>
-            <artifactId>load_balancer_client</artifactId>
-            <version>1.0</version>
-            <scope>provided</scope>
-        </dependency>
-    </dependencies>
 
     <build>
-        <resources>
-            <!-- regular resource processsing for everything except logback.xml -->
-            <resource>
-                <directory>src/main/resources/config</directory>
-                <includes>
-                    <include>appConfigs.xml</include>
-                    <include>InitilaNodes.properties</include>
-                    <include>application.properties</include>
-                </includes>
-            </resource>
-        </resources>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>

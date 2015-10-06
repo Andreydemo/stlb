@@ -1,15 +1,13 @@
-package stlb;
+package com.demosoft.stlb;
 
 /**
  * Created by Andrii_Korkoshko on 17.09.2015.
  */
 import java.util.Arrays;
 
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ApplicationContext;
-import org.springframework.context.annotation.EnableAspectJAutoProxy;
 
 @SpringBootApplication
 public class Application {

@@ -1,4 +1,4 @@
-package stlb;
+package com.demosoft.stlb;
 
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
@@ -13,8 +13,8 @@ public class SheduledTasks {
         System.out.println("SheduledTasks inited");
     }
 
-    @Scheduled(fixedRate=1000)
+    @Scheduled(fixedRate=10000)
     public void task(){
-        System.out.println("Вьебал говна по плану");
+        System.out.println("Sheduled task");
     }
 }
