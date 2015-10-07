@@ -6,7 +6,7 @@ import org.springframework.stereotype.Component;
 /**
  * Created by demos_000 on 03.10.2015.
  */
-@Component
+
 public class SheduledTasks {
 
     public SheduledTasks() {

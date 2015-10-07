@@ -11,7 +11,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @Configuration
 @EnableAspectJAutoProxy
 @EnableAsync
-@EnableScheduling
+/*@EnableScheduling*/
 public class Config {
     public Config() {
         System.out.println("Configs inited");

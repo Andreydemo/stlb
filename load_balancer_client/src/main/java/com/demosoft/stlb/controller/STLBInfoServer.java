@@ -3,7 +3,10 @@ package com.demosoft.stlb.controller;
 import com.demosoft.stlb.bean.STLBInfoRequest;
 import com.demosoft.stlb.bean.STLBInfoResponse;
 import com.esotericsoftware.kryo.Kryo;
+import com.esotericsoftware.kryonet.Connection;
+import com.esotericsoftware.kryonet.Listener;
 import com.esotericsoftware.kryonet.Server;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
@@ -13,9 +16,15 @@ import java.io.IOException;
  */
 @Component
 public class STLBInfoServer {
+
     public static final int infoPort = 54555;
+
+    @Autowired
+    private PerformanceController performanceController;
+
     private Server server = new Server();
-    Kryo kryo = server.getKryo();
+
+    private Kryo kryo = server.getKryo();
 
     public STLBInfoServer() {
         kryo.register(STLBInfoRequest.class);
@@ -25,6 +34,19 @@ public class STLBInfoServer {
             server.bind(infoPort);
         } catch (IOException e) {
             e.printStackTrace();
+        }
+    }
+
+    class STLBInfoServerListener extends Listener {
+        public void received(Connection connection, Object object) {
+            if (object instanceof STLBInfoRequest) {
+                STLBInfoRequest request = (STLBInfoRequest) object;
+                try {
+                    performanceController.setLoadBalancerURI(request.getLoadBalancerURI());
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
         }
     }
 }
