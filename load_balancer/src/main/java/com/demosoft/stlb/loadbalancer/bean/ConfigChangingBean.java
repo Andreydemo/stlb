@@ -1,4 +1,4 @@
-package com.demosoft.stlb.bean;
+package com.demosoft.stlb.loadbalancer.bean;
 
 /**
  * Created by Andrii_Korkoshko on 30.09.2015.

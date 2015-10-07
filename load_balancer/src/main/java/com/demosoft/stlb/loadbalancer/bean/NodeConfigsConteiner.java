@@ -1,6 +1,6 @@
-package com.demosoft.stlb.bean;
+package com.demosoft.stlb.loadbalancer.bean;
 
-import com.demosoft.stlb.service.AdminService;
+import com.demosoft.stlb.loadbalancer.service.AdminService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

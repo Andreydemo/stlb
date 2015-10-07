@@ -1,7 +1,7 @@
-package com.demosoft.stlb.service;
+package com.demosoft.stlb.loadbalancer.service;
 
-import com.demosoft.stlb.bean.Node;
-import com.demosoft.stlb.bean.NodeConfigsConteiner;
+import com.demosoft.stlb.loadbalancer.bean.Node;
+import com.demosoft.stlb.loadbalancer.bean.NodeConfigsConteiner;
 import com.demosoft.stlb.loadbalancer.LoadBalancerHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

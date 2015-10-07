@@ -1,17 +1,17 @@
 package com.demosoft.stlb.bean;
 
+import javax.management.AttributeList;
+import java.io.Serializable;
 import java.util.UUID;
 
 /**
  * Created by Andrii_Korkoshko on 06.10.2015.
  */
-public class STLBRequest {
+public class STLBRequest implements Serializable{
 
     private String id;
 
-    public enum RequestType {
-        SESSION, NODE
-    }
+    private AttributeList nodeSystemParams;
 
     private RequestType requestType;
 
@@ -33,5 +33,17 @@ public class STLBRequest {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public AttributeList getNodeSystemParams() {
+        return nodeSystemParams;
+    }
+
+    public void setNodeSystemParams(AttributeList nodeSystemParams) {
+        this.nodeSystemParams = nodeSystemParams;
+    }
+
+    public enum RequestType {
+        SESSION, NODE
     }
 }

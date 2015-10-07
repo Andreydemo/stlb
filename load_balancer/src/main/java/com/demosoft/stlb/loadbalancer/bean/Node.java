@@ -1,4 +1,4 @@
-package com.demosoft.stlb.bean;
+package com.demosoft.stlb.loadbalancer.bean;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;

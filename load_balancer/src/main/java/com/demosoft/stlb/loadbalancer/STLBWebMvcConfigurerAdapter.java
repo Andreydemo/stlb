@@ -1,4 +1,4 @@
-package com.demosoft.stlb;
+package com.demosoft.stlb.loadbalancer;
 
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.config.annotation.DefaultServletHandlerConfigurer;

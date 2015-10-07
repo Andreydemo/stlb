@@ -1,4 +1,4 @@
-package com.demosoft.stlb.bean;
+package com.demosoft.stlb.loadbalancer.bean;
 
 import org.springframework.stereotype.Component;
 

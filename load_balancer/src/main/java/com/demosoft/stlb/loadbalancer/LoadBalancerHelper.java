@@ -1,8 +1,8 @@
 package com.demosoft.stlb.loadbalancer;
 
-import com.demosoft.stlb.bean.Node;
-import com.demosoft.stlb.bean.NodeConfigsConteiner;
-import com.demosoft.stlb.bean.SessionConnection;
+import com.demosoft.stlb.loadbalancer.bean.Node;
+import com.demosoft.stlb.loadbalancer.bean.NodeConfigsConteiner;
+import com.demosoft.stlb.loadbalancer.bean.SessionConnection;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

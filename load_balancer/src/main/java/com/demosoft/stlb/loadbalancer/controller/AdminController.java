@@ -1,10 +1,10 @@
-package com.demosoft.stlb.controller;
+package com.demosoft.stlb.loadbalancer.controller;
 
-import com.demosoft.stlb.bean.ConfigChangingBean;
-import com.demosoft.stlb.bean.Configs;
-import com.demosoft.stlb.bean.Node;
-import com.demosoft.stlb.bean.NodeConfigsConteiner;
-import com.demosoft.stlb.service.AdminService;
+import com.demosoft.stlb.loadbalancer.bean.ConfigChangingBean;
+import com.demosoft.stlb.loadbalancer.bean.Configs;
+import com.demosoft.stlb.loadbalancer.bean.Node;
+import com.demosoft.stlb.loadbalancer.bean.NodeConfigsConteiner;
+import com.demosoft.stlb.loadbalancer.service.AdminService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;

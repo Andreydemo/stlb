@@ -1,7 +1,7 @@
-package com.demosoft.stlb.bean.listener;
+package com.demosoft.stlb.loadbalancer.bean.listener;
 
-import com.demosoft.stlb.bean.SessionConnection;
-import com.demosoft.stlb.bean.SessionRegistry;
+import com.demosoft.stlb.loadbalancer.bean.SessionConnection;
+import com.demosoft.stlb.loadbalancer.bean.SessionRegistry;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

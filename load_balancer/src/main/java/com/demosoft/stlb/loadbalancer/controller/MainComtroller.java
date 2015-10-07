@@ -1,13 +1,12 @@
-package com.demosoft.stlb.controller;
+package com.demosoft.stlb.loadbalancer.controller;
 
-import com.demosoft.stlb.bean.Configs;
-import com.demosoft.stlb.bean.SessionConnection;
+import com.demosoft.stlb.loadbalancer.bean.Configs;
+import com.demosoft.stlb.loadbalancer.bean.SessionConnection;
 import com.demosoft.stlb.loadbalancer.LoadBalancerHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -18,8 +17,6 @@ import org.springframework.web.client.ResourceAccessException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import java.util.List;
-import java.util.Map;
 
 /**
  * Created by Andrii_Korkoshko on 17.09.2015.
