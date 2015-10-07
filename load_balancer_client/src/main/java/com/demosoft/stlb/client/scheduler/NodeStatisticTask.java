@@ -1,13 +1,12 @@
-package com.demosoft.stlb.scheduler;
+package com.demosoft.stlb.client.scheduler;
 
-import com.demosoft.stlb.bean.STLBRequest;
-import com.demosoft.stlb.controller.PerformanceController;
+import com.demosoft.stlb.client.bean.STLBRequest;
+import com.demosoft.stlb.client.controller.PerformanceController;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.management.*;
 import java.lang.management.ManagementFactory;
-import java.util.Arrays;
 
 /**
  * Created by Andrii_Korkoshko on 07.10.2015.
@@ -41,6 +40,7 @@ public class NodeStatisticTask {
         STLBRequest request = new STLBRequest();
         request.setNodeSystemParams(list);
         performanceController.sendNodeStatistic(request);
+        System.out.println(this.getClass() + " was performed");
     }
 
     private AttributeList getSystemParams() {

@@ -40,7 +40,7 @@
                                 </c:otherwise>
                             </c:choose>
                             <div class="content">
-                               <a href="nodeInfo-${node.nodeId}">${node.url}</a>
+                               <a href="nodeInfo-${node.nodeId}">${node.url} - ${node.name}</a>
                             </div>
                         </div>
                     </c:forEach>

@@ -1,7 +1,7 @@
-package com.demosoft.stlb.controller;
+package com.demosoft.stlb.client.controller;
 
-import com.demosoft.stlb.bean.STLBRequest;
-import com.demosoft.stlb.bean.STLBResponse;
+import com.demosoft.stlb.client.bean.STLBRequest;
+import com.demosoft.stlb.client.bean.STLBResponse;
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryonet.Client;
 import com.esotericsoftware.kryonet.Connection;

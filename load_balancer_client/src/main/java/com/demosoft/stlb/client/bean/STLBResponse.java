@@ -1,4 +1,4 @@
-package com.demosoft.stlb.bean;
+package com.demosoft.stlb.client.bean;
 
 import java.io.Serializable;
 

@@ -1,4 +1,4 @@
-package com.demosoft.stlb;
+package com.demosoft.stlb.client;
 
 /**
  * Created by Andrii_Korkoshko on 06.10.2015.

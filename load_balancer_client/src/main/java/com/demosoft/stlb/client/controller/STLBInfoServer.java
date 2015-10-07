@@ -1,7 +1,7 @@
-package com.demosoft.stlb.controller;
+package com.demosoft.stlb.client.controller;
 
-import com.demosoft.stlb.bean.STLBInfoRequest;
-import com.demosoft.stlb.bean.STLBInfoResponse;
+import com.demosoft.stlb.client.bean.STLBInfoRequest;
+import com.demosoft.stlb.client.bean.STLBInfoResponse;
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
@@ -43,6 +43,10 @@ public class STLBInfoServer {
                 STLBInfoRequest request = (STLBInfoRequest) object;
                 try {
                     performanceController.setLoadBalancerURI(request.getLoadBalancerURI());
+                    STLBInfoResponse response = new STLBInfoResponse();
+                    response.setId(request.getId());
+                    response.setSuccess(true);
+                    connection.sendTCP(response);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }

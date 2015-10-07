@@ -1,18 +1,12 @@
 package com.demosoft.stlb.loadbalancer.controller;
 
-import com.demosoft.stlb.loadbalancer.bean.ConfigChangingBean;
-import com.demosoft.stlb.loadbalancer.bean.Configs;
-import com.demosoft.stlb.loadbalancer.bean.Node;
-import com.demosoft.stlb.loadbalancer.bean.NodeConfigsConteiner;
+import com.demosoft.stlb.loadbalancer.bean.*;
 import com.demosoft.stlb.loadbalancer.service.AdminService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * Created by Andrii_Korkoshko on 30.09.2015.
@@ -44,12 +38,13 @@ public class AdminController {
 
     @RequestMapping(value = "/addNode", method = RequestMethod.GET)
     private String addNodePage(Model m) {
+        m.addAttribute("addNodeBean", new AddNodeBean());
         return "stlbAdminAddNode";
     }
 
     @RequestMapping(value = "/addNode", method = RequestMethod.POST)
-    private String addNode(@RequestParam("url") String addUrls, Model m) {
-        adminService.addNode(addUrls);
+    private String addNode(@ModelAttribute AddNodeBean addNodeBean, Model m) {
+        adminService.addNode(addNodeBean);
         return "redirect:viewNodes";
     }
 

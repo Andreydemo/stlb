@@ -1,4 +1,4 @@
-package com.demosoft.stlb.bean;
+package com.demosoft.stlb.client.bean;
 
 import javax.management.AttributeList;
 import java.io.Serializable;

@@ -61,6 +61,14 @@
                                 </c:choose>
                             </td>
                         </tr>
+                        <tr>
+                            <td  class="left aligned">Balancer URI</td>
+                            <td class="left aligned">${node.balancerURI}</td>
+                        </tr>
+                        <tr>
+                            <td  class="left aligned">Balancer URI</td>
+                            <td class="left aligned">${node.infoConnection}</td>
+                        </tr>
                     </tbody>
                 </table>
                 <c:if test="${node.connectionsCount > 0}">

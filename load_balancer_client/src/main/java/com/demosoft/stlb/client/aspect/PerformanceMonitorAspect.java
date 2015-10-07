@@ -1,6 +1,6 @@
-package com.demosoft.stlb.aspect;
+package com.demosoft.stlb.client.aspect;
 
-import com.demosoft.stlb.bean.SessionBean;
+import com.demosoft.stlb.client.bean.SessionBean;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
@@ -18,7 +18,7 @@ public class PerformanceMonitorAspect {
     @Autowired
     private SessionBean sessionBean;
 
-    @Around("@annotation( com.demosoft.stlb.annotation.PerformanceMonitor)")
+    @Around("@annotation( com.demosoft.stlb.client.annotation.PerformanceMonitor)")
     public Object doBasicProfiling(ProceedingJoinPoint pjp) throws Throwable {
         long time = System.currentTimeMillis();
         Object retVal = pjp.proceed();

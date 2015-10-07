@@ -1,8 +1,10 @@
 package com.demosoft.stlb.loadbalancer.service;
 
+import com.demosoft.stlb.loadbalancer.LoadBalancerHelper;
+import com.demosoft.stlb.loadbalancer.bean.AddNodeBean;
 import com.demosoft.stlb.loadbalancer.bean.Node;
 import com.demosoft.stlb.loadbalancer.bean.NodeConfigsConteiner;
-import com.demosoft.stlb.loadbalancer.LoadBalancerHelper;
+import com.demosoft.stlb.loadbalancer.controller.PerformanceStatisticsReceiver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +13,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.ui.Model;
 import org.springframework.web.client.ResourceAccessException;
 
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.Date;
 
 /**
@@ -25,6 +29,9 @@ public class AdminService {
     @Autowired
     private LoadBalancerHelper loadBalancerHelper;
 
+    @Autowired
+    private PerformanceStatisticsReceiver statisticsReceiver;
+
     private final Logger log = LoggerFactory.getLogger(this.getClass());
 
     public void getAdminPage(Model model) {
@@ -35,6 +42,15 @@ public class AdminService {
     public void updateNodeStatuses() {
         for (Node node : nodeConfigsConteiner.getNodes()) {
             Thread task = new Thread(new UpdateStatusTask(node));
+            log.info("Task for {} created", node.getUrl());
+            task.start();
+            log.info("Task for {} started", node.getUrl());
+        }
+    }
+
+    public void updateNodeStatusesWithConnectionToInfo() {
+        for (Node node : nodeConfigsConteiner.getNodes()) {
+            Thread task = new Thread(new UpdateStatusTaskAndConnEctToInfo(node));
             log.info("Task for {} created", node.getUrl());
             task.start();
             log.info("Task for {} started", node.getUrl());
@@ -56,13 +72,17 @@ public class AdminService {
         }
     }
 
-    public void addNode(String url) {
-        System.out.println("Adding node with url:" + url);
+    public void addNode(AddNodeBean addNodeBean) {
+        System.out.println("Adding node with url:" + addNodeBean.getUrl());
         synchronized (nodeConfigsConteiner.getNodes()) {
-            nodeConfigsConteiner.getNodes().add(new Node(url));
+            Node newNode = new Node();
+            newNode.setUrl(addNodeBean.getUrl().toString());
+            newNode.setName(addNodeBean.getName());
+            newNode.setBalancerURI(addNodeBean.getBalancerURI());
+            nodeConfigsConteiner.getNodes().add(newNode);
         }
-        System.out.println("Added node with url:" + url);
-        log.info("Added node with url: {}", url);
+        System.out.println("Added node with url:" + addNodeBean.getUrl());
+        log.info("Added node with url: {}", addNodeBean.getUrl());
         updateNodeStatuses();
     }
 
@@ -78,13 +98,44 @@ public class AdminService {
             try {
                 HttpStatus status = loadBalancerHelper.get(node.getUrl()).getStatusCode();
                 node.setAvailable(status.is2xxSuccessful());
-                if(status.is2xxSuccessful()){
+                if (status.is2xxSuccessful()) {
                     node.setLastAvailible(new Date());
                 }
             } catch (ResourceAccessException e) {
                 node.setAvailable(false);
             }
             log.info("Task for {} ended", node.getUrl());
+        }
+    }
+
+    class UpdateStatusTaskAndConnEctToInfo implements Runnable {
+        Node node;
+
+        public UpdateStatusTaskAndConnEctToInfo(Node node) {
+            this.node = node;
+        }
+
+        @Override
+        public void run() {
+            try {
+                HttpStatus status = loadBalancerHelper.get(node.getUrl()).getStatusCode();
+                node.setAvailable(status.is2xxSuccessful());
+                if (status.is2xxSuccessful()) {
+                    node.setLastAvailible(new Date());
+                }
+            } catch (ResourceAccessException e) {
+                node.setAvailable(false);
+            }
+            log.info("Task for {} ended", node.getUrl());
+            if (node.isAvailable()) {
+                URI uri = null;
+                try {
+                    uri = new URI(node.getUrl());
+                } catch (URISyntaxException e) {
+                    e.printStackTrace();
+                }
+                node.setInfoConnection(statisticsReceiver.connectToNode(node.getBalancerURI(), uri));
+            }
         }
     }
 }

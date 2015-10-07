@@ -1,7 +1,7 @@
-package com.demosoft.stlb.controller;
+package com.demosoft.stlb.client.controller;
 
-import com.demosoft.stlb.annotation.PerformanceMonitor;
-import com.demosoft.stlb.bean.SessionBean;
+import com.demosoft.stlb.client.annotation.PerformanceMonitor;
+import com.demosoft.stlb.client.bean.SessionBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;

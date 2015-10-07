@@ -1,5 +1,6 @@
 package com.demosoft.stlb.loadbalancer.bean;
 
+import com.demosoft.stlb.loadbalancer.controller.PerformanceStatisticsReceiver;
 import com.demosoft.stlb.loadbalancer.service.AdminService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -8,6 +9,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,19 +25,27 @@ public class NodeConfigsConteiner {
     @Value("#{'${nodesUrls}'.split(',')}")
     private List<String> nodesUrls = new ArrayList<>();
 
+    @Value("${defaultBalancerURI}")
+    private URI defaultBalancerURI;
+
     private List<Node> nodes = new ArrayList<>();
 
     @Autowired
     private AdminService adminService;
 
+    @Autowired
+    private PerformanceStatisticsReceiver statisticsReceiver;
+
 
     @PostConstruct
     private void init() {
         for (String url : nodesUrls) {
-            nodes.add(new Node(url));
+            Node newNode = new Node(url);
+            newNode.setBalancerURI(defaultBalancerURI);
+            nodes.add(newNode);
         }
         log.info("available Nodes: {}", nodes);
-        adminService.updateNodeStatuses();
+        adminService.updateNodeStatusesWithConnectionToInfo();
     }
 
     public List<Node> getNodes() {

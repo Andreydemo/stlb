@@ -1,6 +1,7 @@
 package com.demosoft.stlb.loadbalancer.bean;
 
 import java.lang.ref.WeakReference;
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -17,7 +18,9 @@ public class Node {
 
     private String url;
     private boolean available = false;
+    private boolean infoConnection = false;
     private int connectionsCount;
+    private URI balancerURI;
 
     private List<WeakReference<SessionConnection>> connections = new ArrayList<WeakReference<SessionConnection>>();
 
@@ -29,7 +32,7 @@ public class Node {
     public Node(String url) {
         this.url = url;
         nodeId = UUID.randomUUID().toString();
-        name = "Node - " + url;
+        name = "Node - " + nodeId;
     }
 
     public String getUrl() {
@@ -73,7 +76,7 @@ public class Node {
     public List<SessionConnection> getStrongConnections() {
         filterConncections();
         List<SessionConnection> connections = new ArrayList<>();
-        for (WeakReference<SessionConnection> weak: this.connections) {
+        for (WeakReference<SessionConnection> weak : this.connections) {
             connections.add(weak.get());
         }
         return connections;
@@ -125,5 +128,21 @@ public class Node {
 
     public void setConnectionsCount(int connectionsCount) {
         this.connectionsCount = connectionsCount;
+    }
+
+    public URI getBalancerURI() {
+        return balancerURI;
+    }
+
+    public void setBalancerURI(URI balancerURI) {
+        this.balancerURI = balancerURI;
+    }
+
+    public boolean isInfoConnection() {
+        return infoConnection;
+    }
+
+    public void setInfoConnection(boolean infoConnection) {
+        this.infoConnection = infoConnection;
     }
 }

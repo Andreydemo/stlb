@@ -1,4 +1,4 @@
-package com.demosoft.stlb.scheduler;
+package com.demosoft.stlb.client.scheduler;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,7 +34,7 @@ public class SchedulingConfiguration implements SchedulingConfigurer {
 
 
     public SchedulingConfiguration() {
-        System.out.println("SchedulingConfiguration");
+        System.out.println(this.getClass());
     }
 
     @Override
