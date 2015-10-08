@@ -3,8 +3,10 @@ package com.demosoft.stlb.client.scheduler;
 import com.demosoft.stlb.client.bean.STLBRequest;
 import com.demosoft.stlb.client.controller.PerformanceController;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.PostConstruct;
 import javax.management.*;
 import java.lang.management.ManagementFactory;
 import java.util.HashMap;

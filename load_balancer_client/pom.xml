@@ -18,6 +18,16 @@
 
 
     <build>
+        <resources>
+            <!-- regular resource processsing for everything except logback.xml -->
+            <resource>
+                <directory>src/main/resources/config</directory>
+                <includes>
+                    <include>appConfigs.xml</include>
+                    <include>clientConfig.properties</include>
+                </includes>
+            </resource>
+        </resources>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
