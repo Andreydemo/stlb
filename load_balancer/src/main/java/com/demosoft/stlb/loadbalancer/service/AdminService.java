@@ -4,7 +4,7 @@ import com.demosoft.stlb.loadbalancer.LoadBalancerHelper;
 import com.demosoft.stlb.loadbalancer.bean.AddNodeBean;
 import com.demosoft.stlb.loadbalancer.bean.Node;
 import com.demosoft.stlb.loadbalancer.bean.NodeConfigsConteiner;
-import com.demosoft.stlb.loadbalancer.controller.PerformanceStatisticsReceiver;
+import com.demosoft.stlb.loadbalancer.controller.NodeInfoConnectionClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,7 +31,7 @@ public class AdminService {
     private LoadBalancerHelper loadBalancerHelper;
 
     @Autowired
-    private PerformanceStatisticsReceiver statisticsReceiver;
+    private NodeInfoConnectionClient statisticsReceiver;
 
     private final Logger log = LoggerFactory.getLogger(this.getClass());
 

@@ -1,6 +1,6 @@
 package com.demosoft.stlb.loadbalancer.bean;
 
-import com.demosoft.stlb.loadbalancer.controller.PerformanceStatisticsReceiver;
+import com.demosoft.stlb.loadbalancer.controller.NodeInfoConnectionClient;
 import com.demosoft.stlb.loadbalancer.service.AdminService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,7 +37,7 @@ public class NodeConfigsConteiner {
     private AdminService adminService;
 
     @Autowired
-    private PerformanceStatisticsReceiver statisticsReceiver;
+    private NodeInfoConnectionClient statisticsReceiver;
 
 
     @PostConstruct

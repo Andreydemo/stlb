@@ -20,7 +20,7 @@ import java.util.Map;
  * Created by Andrii_Korkoshko on 07.10.2015.
  */
 @Component
-public class PerformanceStatisticsReceiver {
+public class NodeInfoConnectionClient {
     private Client client = new Client();
     private Kryo clientKryo = client.getKryo();
     private Map<String, STLBInfoResponse> lastReponses = new HashMap<>();
@@ -30,21 +30,11 @@ public class PerformanceStatisticsReceiver {
     @Autowired
     private NodeConfigsConteiner nodeConfigsConteiner;
 
-    public PerformanceStatisticsReceiver() {
+    public NodeInfoConnectionClient() {
         clientKryo.register(STLBInfoRequest.class);
         clientKryo.register(STLBInfoResponse.class);
         clientKryo.register(URI.class).getId();
         client.addListener(new NodeConncetionListener());
-        /*try {
-           *//* server.bind(nodeConfigsConteiner.getDefaultBalancerPort());
-            System.out.println("port: " + nodeConfigsConteiner.getDefaultBalancerPort() + " binded");*//*
-            server.bind(55555);
-            System.out.println("port: " + 55555 + " binded");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        server.addListener(new NodeStatisticListener());*/
-
     }
 
 
