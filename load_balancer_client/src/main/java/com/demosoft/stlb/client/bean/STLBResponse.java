@@ -7,6 +7,7 @@ import java.io.Serializable;
  */
 public class STLBResponse implements Serializable {
 
+    private static final long serialVersionUID = 6454636519524390245L;
     private String id;
 
     private boolean success;

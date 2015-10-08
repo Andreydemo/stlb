@@ -7,7 +7,10 @@ import java.io.Serializable;
  */
 public class STLBInfoResponse implements Serializable {
 
+    private static final long serialVersionUID = 991925589261798626L;
     private String id;
+
+    private String from;
 
     boolean success;
 
@@ -25,5 +28,13 @@ public class STLBInfoResponse implements Serializable {
 
     public void setSuccess(boolean success) {
         this.success = success;
+    }
+
+    public String getFrom() {
+        return from;
+    }
+
+    public void setFrom(String from) {
+        this.from = from;
     }
 }

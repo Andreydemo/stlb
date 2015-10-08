@@ -9,7 +9,10 @@ import java.util.UUID;
  */
 public class STLBInfoRequest implements Serializable {
 
+
+    private static final long serialVersionUID = 4366077735133337997L;
     private URI loadBalancerURI;
+    private String from;
     private String id;
 
     public STLBInfoRequest() {
@@ -30,5 +33,13 @@ public class STLBInfoRequest implements Serializable {
 
     public void setLoadBalancerURI(URI loadBalancerURI) {
         this.loadBalancerURI = loadBalancerURI;
+    }
+
+    public String getFrom() {
+        return from;
+    }
+
+    public void setFrom(String from) {
+        this.from = from;
     }
 }

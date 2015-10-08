@@ -28,6 +28,9 @@ public class NodeConfigsConteiner {
     @Value("${defaultBalancerURI}")
     private URI defaultBalancerURI;
 
+    @Value("${defaultBalancerPort}")
+    private int defaultBalancerPort;
+
     private List<Node> nodes = new ArrayList<>();
 
     @Autowired
@@ -41,11 +44,21 @@ public class NodeConfigsConteiner {
     private void init() {
         for (String url : nodesUrls) {
             Node newNode = new Node(url);
-            newNode.setBalancerURI(defaultBalancerURI);
+            newNode.setBalancerURI(compileDefaultBalancerURI(defaultBalancerURI));
             nodes.add(newNode);
         }
         log.info("available Nodes: {}", nodes);
         adminService.updateNodeStatusesWithConnectionToInfo();
+    }
+
+    private URI compileDefaultBalancerURI(URI defaultBalancerURI) {
+
+        try {
+            return new URI(defaultBalancerURI.getScheme(), defaultBalancerURI.getUserInfo(), defaultBalancerURI.getHost(), defaultBalancerPort, defaultBalancerURI.getPath(), defaultBalancerURI.getQuery(), defaultBalancerURI.getFragment());
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+        }
+        return defaultBalancerURI;
     }
 
     public List<Node> getNodes() {
@@ -62,10 +75,10 @@ public class NodeConfigsConteiner {
         return availbleNodes;
     }
 
-    public Node getNodeById(String id){
-        for (Node node :nodes){
-            if(node.getNodeId().equals(id)){
-                return  node;
+    public Node getNodeById(String id) {
+        for (Node node : nodes) {
+            if (node.getNodeId().equals(id)) {
+                return node;
             }
         }
         return null;
@@ -73,5 +86,9 @@ public class NodeConfigsConteiner {
 
     public void setNodes(List<Node> nodes) {
         this.nodes = nodes;
+    }
+
+    public int getDefaultBalancerPort() {
+        return defaultBalancerPort;
     }
 }

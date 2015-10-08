@@ -9,7 +9,9 @@ import com.esotericsoftware.kryonet.Server;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import javax.management.AttributeList;
 import java.io.IOException;
+import java.net.URI;
 
 /**
  * Created by Andrii_Korkoshko on 06.10.2015.
@@ -29,12 +31,16 @@ public class STLBInfoServer {
     public STLBInfoServer() {
         kryo.register(STLBInfoRequest.class);
         kryo.register(STLBInfoResponse.class);
+        kryo.register(URI.class);
+        kryo.register(AttributeList.class);
         server.start();
         try {
             server.bind(infoPort);
+            System.out.println("Info port: " + infoPort + " binded");
         } catch (IOException e) {
             e.printStackTrace();
         }
+        server.addListener(new STLBInfoServerListener());
     }
 
     class STLBInfoServerListener extends Listener {
@@ -42,11 +48,15 @@ public class STLBInfoServer {
             if (object instanceof STLBInfoRequest) {
                 STLBInfoRequest request = (STLBInfoRequest) object;
                 try {
+                    System.out.println("->>> from: " + request.getFrom());
                     performanceController.setLoadBalancerURI(request.getLoadBalancerURI());
                     STLBInfoResponse response = new STLBInfoResponse();
                     response.setId(request.getId());
                     response.setSuccess(true);
+                    response.setFrom("STLB info server ");
+                    System.out.println("sending response");
                     connection.sendTCP(response);
+                    System.out.println("response sended");
                 } catch (IOException e) {
                     e.printStackTrace();
                 }

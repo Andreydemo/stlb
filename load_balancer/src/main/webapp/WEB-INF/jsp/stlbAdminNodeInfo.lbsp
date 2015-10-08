@@ -66,8 +66,17 @@
                             <td class="left aligned">${node.balancerURI}</td>
                         </tr>
                         <tr>
-                            <td  class="left aligned">Balancer URI</td>
-                            <td class="left aligned">${node.infoConnection}</td>
+                            <td  class="left aligned">Info connection</td>
+                            <td class="left aligned">
+                                <c:choose>
+                                    <c:when test="${node.infoConnection}">
+                                        <i class="circular plug icon inverted green"></i>
+                                    </c:when>
+                                    <c:otherwise>
+                                        <i class="circular plug icon inverted red"></i>
+                                    </c:otherwise>
+                                </c:choose>
+                            </td>
                         </tr>
                     </tbody>
                 </table>

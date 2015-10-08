@@ -7,6 +7,8 @@ import org.springframework.stereotype.Component;
 
 import javax.management.*;
 import java.lang.management.ManagementFactory;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by Andrii_Korkoshko on 07.10.2015.
@@ -38,7 +40,15 @@ public class NodeStatisticTask {
     public void execute() {
         AttributeList list = getSystemParams();
         STLBRequest request = new STLBRequest();
-        request.setNodeSystemParams(list);
+        Map<String, Object> map = new HashMap<>();
+        for (Attribute attribute : list.asList()) {
+            map.put(attribute.getName(), attribute.getValue());
+        }
+        request.setSystemCpuLoad((Double) map.get(SystemParams.SystemCpuLoad.toString()));
+        request.setProcessCpuLoad((Double) map.get(SystemParams.ProcessCpuLoad.toString()));
+        request.setProcessCpuTime((Long) map.get(SystemParams.ProcessCpuTime.toString()));
+        request.setFreePhysicalMemorySize((Long) map.get(SystemParams.FreePhysicalMemorySize.toString()));
+        request.setTotalPhysicalMemorySize((Long) map.get(SystemParams.TotalPhysicalMemorySize.toString()));
         performanceController.sendNodeStatistic(request);
         System.out.println(this.getClass() + " was performed");
     }

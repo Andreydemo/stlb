@@ -2,13 +2,13 @@ package com.demosoft.stlb.loadbalancer.controller;
 
 import com.demosoft.stlb.client.bean.STLBInfoRequest;
 import com.demosoft.stlb.client.bean.STLBInfoResponse;
-import com.demosoft.stlb.client.bean.STLBResponse;
 import com.demosoft.stlb.client.controller.STLBInfoServer;
+import com.demosoft.stlb.loadbalancer.bean.NodeConfigsConteiner;
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryonet.Client;
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
-import com.esotericsoftware.kryonet.Server;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
@@ -22,29 +22,36 @@ import java.util.Map;
 @Component
 public class PerformanceStatisticsReceiver {
     private Client client = new Client();
-    private Kryo kryo = client.getKryo();
+    private Kryo clientKryo = client.getKryo();
     private Map<String, STLBInfoResponse> lastReponses = new HashMap<>();
-    private Server server = new Server();
     public static final long timeout = 1000;
-    public static final int infoPort = 54555;
+    public static final int infoPort = 55555;
+
+    @Autowired
+    private NodeConfigsConteiner nodeConfigsConteiner;
 
     public PerformanceStatisticsReceiver() {
-        kryo.register(STLBInfoRequest.class);
-        kryo.register(STLBInfoResponse.class);
-        kryo.register(URI.class);
-
-        server.start();
-        try {
-            server.bind(infoPort);
+        clientKryo.register(STLBInfoRequest.class);
+        clientKryo.register(STLBInfoResponse.class);
+        clientKryo.register(URI.class).getId();
+        client.addListener(new NodeConncetionListener());
+        /*try {
+           *//* server.bind(nodeConfigsConteiner.getDefaultBalancerPort());
+            System.out.println("port: " + nodeConfigsConteiner.getDefaultBalancerPort() + " binded");*//*
+            server.bind(55555);
+            System.out.println("port: " + 55555 + " binded");
         } catch (IOException e) {
             e.printStackTrace();
         }
+        server.addListener(new NodeStatisticListener());*/
+
     }
 
 
     public boolean connectToNode(URI loadBalancerURI, URI nodeURI) {
         STLBInfoRequest request = new STLBInfoRequest();
         request.setLoadBalancerURI(loadBalancerURI);
+        request.setFrom("Load balancer");
         try {
             client.start();
             System.out.println("connection to: " + nodeURI.getHost() + ":" + STLBInfoServer.infoPort);
@@ -73,7 +80,7 @@ public class PerformanceStatisticsReceiver {
 
     class NodeConncetionListener extends Listener {
         public void received(Connection connection, Object object) {
-            if (object instanceof STLBResponse) {
+            if (object instanceof STLBInfoResponse) {
                 STLBInfoResponse response = (STLBInfoResponse) object;
                 lastReponses.put(response.getId(), response);
             }
