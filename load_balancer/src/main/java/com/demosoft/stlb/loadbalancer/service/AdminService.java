@@ -75,8 +75,8 @@ public class AdminService {
 
     public void addNode(AddNodeBean addNodeBean) {
         System.out.println("Adding node with url:" + addNodeBean.getUrl());
+        Node newNode = new Node();
         synchronized (nodeConfigsConteiner.getNodes()) {
-            Node newNode = new Node();
             newNode.setUrl(addNodeBean.getUrl().toString());
             newNode.setName(addNodeBean.getName());
             newNode.setBalancerURI(addNodeBean.getBalancerURI());
@@ -85,6 +85,13 @@ public class AdminService {
         System.out.println("Added node with url:" + addNodeBean.getUrl());
         log.info("Added node with url: {}", addNodeBean.getUrl());
         updateNodeStatuses();
+        URI uri = null;
+        try {
+            uri = new URI(newNode.getUrl());
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+        }
+        newNode.setInfoConnection(statisticsReceiver.connectToNode(newNode.getBalancerURI(), uri));
     }
 
     class UpdateStatusTask implements Runnable {

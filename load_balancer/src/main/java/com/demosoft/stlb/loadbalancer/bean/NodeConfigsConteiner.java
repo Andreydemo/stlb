@@ -1,6 +1,7 @@
 package com.demosoft.stlb.loadbalancer.bean;
 
 import com.demosoft.stlb.loadbalancer.controller.NodeInfoConnectionClient;
+import com.demosoft.stlb.loadbalancer.dao.NodeDbAccessObject;
 import com.demosoft.stlb.loadbalancer.service.AdminService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,14 +39,21 @@ public class NodeConfigsConteiner {
 
     @Autowired
     private NodeInfoConnectionClient statisticsReceiver;
-
+    @Autowired
+    private NodeDbAccessObject nodeDbAccessObject;
 
     @PostConstruct
     private void init() {
-        for (String url : nodesUrls) {
-            Node newNode = new Node(url);
-            newNode.setBalancerURI(compileDefaultBalancerURI(defaultBalancerURI));
-            nodes.add(newNode);
+        List<Node> dbNodes = nodeDbAccessObject.fetchNodes();
+        if (dbNodes == null || dbNodes.size() == 0) {
+
+            for (String url : nodesUrls) {
+                Node newNode = new Node(url);
+                newNode.setBalancerURI(compileDefaultBalancerURI(defaultBalancerURI));
+                nodes.add(newNode);
+            }
+        } else {
+            nodes.addAll(dbNodes);
         }
         log.info("available Nodes: {}", nodes);
         adminService.updateNodeStatusesWithConnectionToInfo();
