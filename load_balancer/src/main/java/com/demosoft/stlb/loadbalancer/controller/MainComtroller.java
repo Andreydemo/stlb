@@ -63,7 +63,7 @@ public class MainComtroller {
 
     private void checkSessionConection(HttpSession session) {
         sessionConnection.setjSessionId(session.getId());
-        if (sessionConnection.getNode() == null || !sessionConnection.getNode().isAvailable()) {
+        if (sessionConnection.getNode() == null || !sessionConnection.getNode().isCanBeUsed()) {
             sessionConnection.setNode(loadBalancerHelper.getAvailibleNode());
             log.debug("Node {} was given to {}", sessionConnection.getNode().getUrl(), sessionConnection.getjSessionId());
             log.debug("Node {} has  {} connections {}", sessionConnection.getNode().getUrl(), sessionConnection.getNode().getConnectionCount(), sessionConnection.getNode().getConnections());

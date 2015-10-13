@@ -76,7 +76,7 @@ public class NodeConfigsConteiner {
     public List<Node> getAvailbleNodes() {
         List<Node> availbleNodes = new ArrayList<>();
         for (Node node : nodes) {
-            if (node.isAvailable()) {
+            if (node.isCanBeUsed()) {
                 availbleNodes.add(node);
             }
         }
