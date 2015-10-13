@@ -77,6 +77,10 @@ public class AdminService {
         }
     }
 
+    public void switchNodeStatus(String nodeId,boolean enabled) {
+        nodeConfigsConteiner.getNodeById(nodeId).setEnabled(enabled);
+    }
+
     public void addNode(AddNodeBean addNodeBean) {
         System.out.println("Adding node with url:" + addNodeBean.getUrl());
         Node newNode = new Node();

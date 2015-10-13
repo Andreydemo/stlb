@@ -25,6 +25,22 @@
                 <div class="ui middle aligned divided list">
                     <c:forEach items="${availableNodes}" var="node">
                         <div class="item">
+                            <form action="/stlb/switchNodeStatus" method="post" class="right floated content">
+                                <input type="hidden" value="${node.nodeId}" name="nodeId">
+                                <c:choose>
+                                    <c:when test="${node.enabled}">
+                                        <button type="submit" class="positive ui button" name="set">
+                                            enabled
+                                        </button>
+                                    </c:when>
+                                    <c:otherwise>
+                                        <button type="submit" class="negative ui button" name="set">
+                                            disabled
+                                        </button>
+                                    </c:otherwise>
+                                </c:choose>
+
+                            </form>
                             <form action="/stlb/removeNode" method="post" class="right floated content">
                                 <input type="hidden" value="${node.url}" name="deletingUrl"/>
                                 <button type="submit" class="ui icon button">

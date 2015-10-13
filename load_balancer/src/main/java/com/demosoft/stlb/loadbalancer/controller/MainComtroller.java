@@ -41,7 +41,7 @@ public class MainComtroller {
     private String processGetRequest(HttpSession session, HttpServletRequest request) throws ResourceAccessException {
         checkSessionConection(session);
         request.getServletContext().getServletRegistrations();
-        log.info("GET call for {} node for path {}",sessionConnection.getNode().getUrl(), request.getRequestURI());
+        log.debug("GET call for {} node for path {}",sessionConnection.getNode().getUrl(), request.getRequestURI());
         String response = loadBalancerHelper.get(request, sessionConnection).getBody();
         sessionConnection.updateActivity();
         return generateResponseHtml(request, response);
@@ -56,7 +56,6 @@ public class MainComtroller {
         loadBalancerHelper. compileHttpPostHeader(request,httpServletResponse, responseEntity.getHeaders());
         httpServletResponse.setStatus(responseEntity.getStatusCode().value());
         sessionConnection.updateActivity();
-        System.out.println(httpServletResponse.getHeader("Set-Cookie"));
         return generateResponseHtml(request, response);
     }
 
@@ -66,8 +65,8 @@ public class MainComtroller {
         sessionConnection.setjSessionId(session.getId());
         if (sessionConnection.getNode() == null || !sessionConnection.getNode().isAvailable()) {
             sessionConnection.setNode(loadBalancerHelper.getAvailibleNode());
-            log.info("Node {} was given to {}", sessionConnection.getNode().getUrl(), sessionConnection.getjSessionId());
-            log.info("Node {} has  {} connections {}", sessionConnection.getNode().getUrl(), sessionConnection.getNode().getConnectionCount(), sessionConnection.getNode().getConnections());
+            log.debug("Node {} was given to {}", sessionConnection.getNode().getUrl(), sessionConnection.getjSessionId());
+            log.debug("Node {} has  {} connections {}", sessionConnection.getNode().getUrl(), sessionConnection.getNode().getConnectionCount(), sessionConnection.getNode().getConnections());
         }
     }
 

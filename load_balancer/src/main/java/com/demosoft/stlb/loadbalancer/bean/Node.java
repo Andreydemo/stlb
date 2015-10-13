@@ -22,6 +22,7 @@ public class Node {
     private boolean infoConnection = false;
     private int connectionsCount;
     private URI balancerURI;
+    private boolean enabled = true;
 
     private List<WeakReference<SessionConnection>> connections = new ArrayList<WeakReference<SessionConnection>>();
 
@@ -167,5 +168,17 @@ public class Node {
         nodeEntity.setNodeId(nodeId);
         nodeEntity.setUrl(url);
         return nodeEntity;
+    }
+
+    public boolean isEnabled() {
+        return enabled;
+    }
+
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
+    }
+
+    public boolean isCanBeUsed() {
+        return available & enabled;
     }
 }
