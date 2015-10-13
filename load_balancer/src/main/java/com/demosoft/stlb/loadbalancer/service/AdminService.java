@@ -5,6 +5,7 @@ import com.demosoft.stlb.loadbalancer.bean.AddNodeBean;
 import com.demosoft.stlb.loadbalancer.bean.Node;
 import com.demosoft.stlb.loadbalancer.bean.NodeConfigsConteiner;
 import com.demosoft.stlb.loadbalancer.controller.NodeInfoConnectionClient;
+import com.demosoft.stlb.loadbalancer.dao.NodeDbAccessObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +33,9 @@ public class AdminService {
 
     @Autowired
     private NodeInfoConnectionClient statisticsReceiver;
+
+    @Autowired
+    private NodeDbAccessObject nodeDbAccessObject;
 
     private final Logger log = LoggerFactory.getLogger(this.getClass());
 
@@ -91,6 +95,7 @@ public class AdminService {
         } catch (URISyntaxException e) {
             e.printStackTrace();
         }
+        nodeDbAccessObject.addNode(newNode);
         newNode.setInfoConnection(statisticsReceiver.connectToNode(newNode.getBalancerURI(), uri));
     }
 
