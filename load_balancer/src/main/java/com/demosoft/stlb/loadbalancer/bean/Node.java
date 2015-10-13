@@ -2,6 +2,7 @@ package com.demosoft.stlb.loadbalancer.bean;
 
 import java.lang.ref.WeakReference;
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -27,6 +28,18 @@ public class Node {
     public Node() {
         name = "Node";
         nodeId = UUID.randomUUID().toString();
+    }
+
+    public Node(NodeEntity nodeEntity) {
+        name = nodeEntity.getName();
+        nodeId = nodeEntity.getNodeId();
+        lastAvailible = nodeEntity.getLastAvailible();
+        url = nodeEntity.getUrl();
+        try {
+            balancerURI = new URI(nodeEntity.getBalancerURI());
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+        }
     }
 
     public Node(String url) {
@@ -144,5 +157,15 @@ public class Node {
 
     public void setInfoConnection(boolean infoConnection) {
         this.infoConnection = infoConnection;
+    }
+
+    public NodeEntity getNodeEntity() {
+        NodeEntity nodeEntity = new NodeEntity();
+        nodeEntity.setBalancerURI(balancerURI.toString());
+        nodeEntity.setLastAvailible(lastAvailible);
+        nodeEntity.setName(name);
+        nodeEntity.setNodeId(nodeId);
+        nodeEntity.setUrl(url);
+        return nodeEntity;
     }
 }
