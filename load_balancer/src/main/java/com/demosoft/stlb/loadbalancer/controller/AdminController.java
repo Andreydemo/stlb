@@ -36,9 +36,9 @@ public class AdminController {
         return "redirect:viewNodes";
     }
 
-    @RequestMapping(value = "/switchNodeStatusFrom{status}", method = RequestMethod.POST)
-    private String switchNodeStatus(@RequestParam("nodeId") String nodeId, @PathVariable String status, Model m) {
-        if ("disabled".equalsIgnoreCase(status)) {
+    @RequestMapping(value = "/switchNodeStatusFrom-{status}", method = RequestMethod.POST)
+    private String switchNodeStatus(@RequestParam("nodeId") String nodeId, @PathVariable boolean status, Model m) {
+        if (status) {
             adminService.switchNodeStatus(nodeId, false);
         } else {
             adminService.switchNodeStatus(nodeId, true);
