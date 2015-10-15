@@ -59,7 +59,7 @@ public class NodeConfigsConteiner {
         adminService.updateNodeStatusesWithConnectionToInfo();
     }
 
-    private URI compileDefaultBalancerURI(URI defaultBalancerURI) {
+    public URI compileDefaultBalancerURI(URI defaultBalancerURI) {
 
         try {
             return new URI(defaultBalancerURI.getScheme(), defaultBalancerURI.getUserInfo(), defaultBalancerURI.getHost(), defaultBalancerPort, defaultBalancerURI.getPath(), defaultBalancerURI.getQuery(), defaultBalancerURI.getFragment());

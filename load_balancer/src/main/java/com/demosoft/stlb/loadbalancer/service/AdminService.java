@@ -88,7 +88,7 @@ public class AdminService {
         System.out.println("Adding node with url:" + addNodeBean.getUrl());
         Node newNode = new Node();
         synchronized (nodeConfigsConteiner.getNodes()) {
-            newNode.setUrl(addNodeBean.getUrl().toString());
+            newNode.setUrl( nodeConfigsConteiner.compileDefaultBalancerURI(addNodeBean.getUrl()).toString());
             newNode.setName(addNodeBean.getName());
             newNode.setBalancerURI(addNodeBean.getBalancerURI());
             nodeConfigsConteiner.getNodes().add(newNode);
