@@ -3,12 +3,11 @@ package com.demosoft.stlb.client.scheduler;
 import com.demosoft.stlb.client.bean.STLBRequest;
 import com.demosoft.stlb.client.controller.PerformanceController;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.PostConstruct;
 import javax.management.*;
 import java.lang.management.ManagementFactory;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -40,8 +39,8 @@ public class NodeStatisticTask {
     }
 
     public void execute() {
-        AttributeList list = getSystemParams();
         STLBRequest request = new STLBRequest();
+        AttributeList list = getSystemParams();
         Map<String, Object> map = new HashMap<>();
         for (Attribute attribute : list.asList()) {
             map.put(attribute.getName(), attribute.getValue());
@@ -51,6 +50,8 @@ public class NodeStatisticTask {
         request.setProcessCpuTime((Long) map.get(SystemParams.ProcessCpuTime.toString()));
         request.setFreePhysicalMemorySize((Long) map.get(SystemParams.FreePhysicalMemorySize.toString()));
         request.setTotalPhysicalMemorySize((Long) map.get(SystemParams.TotalPhysicalMemorySize.toString()));
+        request.setInterval(interval);
+        request.setOwnNodeId(performanceController.getOwnNodeId());
         performanceController.sendNodeStatistic(request);
         System.out.println(this.getClass() + " was performed");
     }

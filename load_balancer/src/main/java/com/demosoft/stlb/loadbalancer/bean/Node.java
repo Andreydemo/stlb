@@ -23,6 +23,8 @@ public class Node {
     private int connectionsCount;
     private URI balancerURI;
     private boolean enabled = true;
+    private int interval = -1;
+    private List<SystemReport> systemReports = new ArrayList<>();
 
     private List<WeakReference<SessionConnection>> connections = new ArrayList<WeakReference<SessionConnection>>();
 
@@ -180,5 +182,25 @@ public class Node {
 
     public boolean isCanBeUsed() {
         return available & enabled;
+    }
+
+    public int getInterval() {
+        return interval;
+    }
+
+    public void setInterval(int interval) {
+        this.interval = interval;
+    }
+
+    public List<SystemReport> getSystemReports() {
+        return systemReports;
+    }
+
+    public void setSystemReports(List<SystemReport> systemReports) {
+        this.systemReports = systemReports;
+    }
+
+    public boolean addSystemReport(SystemReport systemReport) {
+        return systemReports.add(systemReport);
     }
 }

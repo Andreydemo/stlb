@@ -40,7 +40,14 @@ public class BalancerApplication extends SpringBootServletInitializer {
     }
 
     public static void main(String[] args) {
+        int mb = 1024*1024;
         ApplicationContext ctx = SpringApplication.run(BalancerApplication.class, args);
+        Runtime runtime = Runtime.getRuntime();
+        //Print total available memory
+        System.out.println("Total Memory:" + runtime.totalMemory() / mb);
+
+        //Print Maximum available memory
+        System.out.println("Max Memory:" + runtime.maxMemory() / mb);
     }
 
 }

@@ -27,4 +27,42 @@
         $('.ui.accordion')
           .accordion()
         ;
+      /* $('.menu .item')
+         .tab()
+       ;*/
+        $('.menu .item')
+                .tab({
+                    cache: false,
+                    // faking api request
+                    apiSettings: {
+                      loadingDuration : 300,
+                      mockResponse    : function(settings) {
+
+
+                        var response = {
+                          first  : function(){
+                           $.ajax({
+                            url: '/stlb/nodeInfoFragment-' + $("#nodeId").val(),
+                             success: function(data) {
+                             $('#first-tab').html(data);
+                             }
+                            });
+                          },
+                          second : function(){
+                            $.ajax({
+                                   url: '/stlb/nodeLoading-' + $("#nodeId").val(),
+                                    success: function(data) {
+                                    $('#second-tab').html(data);
+                                    }
+                                   });
+                                 },
+                        };
+                        return response[settings.urlData.tab];
+                      }
+                    },
+                    context : 'parent',
+                    auto    : true,
+                    path    : '/'
+                  })
+                ;
 })();

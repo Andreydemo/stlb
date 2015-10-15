@@ -9,6 +9,7 @@ public class STLBResponse implements Serializable {
 
     private static final long serialVersionUID = 6454636519524390245L;
     private String id;
+    private String ownNodeId;
 
     private boolean success;
 
@@ -26,5 +27,13 @@ public class STLBResponse implements Serializable {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public String getOwnNodeId() {
+        return ownNodeId;
+    }
+
+    public void setOwnNodeId(String ownNodeId) {
+        this.ownNodeId = ownNodeId;
     }
 }

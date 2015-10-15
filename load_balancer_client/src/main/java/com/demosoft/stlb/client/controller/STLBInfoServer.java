@@ -2,6 +2,7 @@ package com.demosoft.stlb.client.controller;
 
 import com.demosoft.stlb.client.bean.STLBInfoRequest;
 import com.demosoft.stlb.client.bean.STLBInfoResponse;
+import com.demosoft.stlb.client.scheduler.NodeStatisticTask;
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
@@ -23,6 +24,9 @@ public class STLBInfoServer {
 
     @Autowired
     private PerformanceController performanceController;
+
+    @Autowired
+    private NodeStatisticTask nodeStatisticTask;
 
     private Server server = new Server();
 
@@ -48,15 +52,18 @@ public class STLBInfoServer {
             if (object instanceof STLBInfoRequest) {
                 STLBInfoRequest request = (STLBInfoRequest) object;
                 try {
+                    if (request.getInterval() > 0) {
+                        nodeStatisticTask.setInterval(request.getInterval());
+                    } else {
+                        performanceController.setLoadBalancerURI(request.getLoadBalancerURI());
+                        performanceController.setOwnNodeId(request.getOwnNodeId());
+                    }
                     System.out.println("->>> from: " + request.getFrom());
-                    performanceController.setLoadBalancerURI(request.getLoadBalancerURI());
                     STLBInfoResponse response = new STLBInfoResponse();
                     response.setId(request.getId());
                     response.setSuccess(true);
-                    response.setFrom("STLB info server ");
-                    System.out.println("sending response");
+                    response.setOwnNodeId(performanceController.getOwnNodeId());
                     connection.sendTCP(response);
-                    System.out.println("response sended");
                 } catch (IOException e) {
                     e.printStackTrace();
                 }

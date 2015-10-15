@@ -1,48 +1,33 @@
-package com.demosoft.stlb.client.bean;
+package com.demosoft.stlb.loadbalancer.bean;
 
-import java.io.Serializable;
+import com.demosoft.stlb.client.bean.STLBRequest;
+
 import java.util.Date;
-import java.util.UUID;
 
 /**
- * Created by Andrii_Korkoshko on 06.10.2015.
+ * Created by Andrii_Korkoshko on 15.10.2015.
  */
-public class STLBRequest implements Serializable {
-
-    private static final long serialVersionUID = -785259415286305761L;
-    public static final String SESSION = "SESSION";
-    public static final String NODE = "NODE";
-    private String id;
+public class SystemReport {
 
     private Double processCpuLoad;
     private Double systemCpuLoad;
     private Long processCpuTime;
     private Long freePhysicalMemorySize;
     private Long totalPhysicalMemorySize;
-    private int interval;
-    private String ownNodeId;
+
+    private Date reportDate;
 
 
-    private String requestType;
-
-    public STLBRequest() {
-        id = UUID.randomUUID().toString();
+    public SystemReport() {
     }
 
-    public String getRequestType() {
-        return requestType;
-    }
-
-    public void setRequestType(String requestType) {
-        this.requestType = requestType;
-    }
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
+    public SystemReport(STLBRequest stlbRequest) {
+        this.processCpuLoad =((int)(stlbRequest.getProcessCpuLoad() * 10000) / 100.0);
+        this.systemCpuLoad = ((int)(stlbRequest.getSystemCpuLoad() * 10000) / 100.0);
+        this.processCpuTime = stlbRequest.getProcessCpuTime();
+        this.freePhysicalMemorySize = stlbRequest.getFreePhysicalMemorySize();
+        this.totalPhysicalMemorySize = stlbRequest.getTotalPhysicalMemorySize();
+        this.reportDate = new Date();
     }
 
     public Double getProcessCpuLoad() {
@@ -85,20 +70,11 @@ public class STLBRequest implements Serializable {
         this.totalPhysicalMemorySize = totalPhysicalMemorySize;
     }
 
-    public int getInterval() {
-        return interval;
+    public Date getReportDate() {
+        return reportDate;
     }
 
-    public void setInterval(int interval) {
-        this.interval = interval;
+    public void setReportDate(Date reportDate) {
+        this.reportDate = reportDate;
     }
-
-    public String getOwnNodeId() {
-        return ownNodeId;
-    }
-
-    public void setOwnNodeId(String ownNodeId) {
-        this.ownNodeId = ownNodeId;
-    }
-
 }

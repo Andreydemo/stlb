@@ -4,7 +4,9 @@ import com.demosoft.stlb.client.bean.STLBInfoRequest;
 import com.demosoft.stlb.client.bean.STLBInfoResponse;
 import com.demosoft.stlb.client.bean.STLBRequest;
 import com.demosoft.stlb.client.bean.STLBResponse;
+import com.demosoft.stlb.loadbalancer.bean.Node;
 import com.demosoft.stlb.loadbalancer.bean.NodeConfigsConteiner;
+import com.demosoft.stlb.loadbalancer.bean.SystemReport;
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
@@ -69,6 +71,9 @@ public class PerformanceStatisticsServer {
                 response.setSuccess(true);
                 response.setId(request.getId());
                 connection.sendTCP(response);
+                Node node = nodeConfigsConteiner.getNodeById(request.getOwnNodeId());
+                node.setInterval(request.getInterval());
+                node.addSystemReport(new SystemReport(request));
             }
         }
 

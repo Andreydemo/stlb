@@ -71,6 +71,28 @@ public class AdminController {
         m.addAttribute("node", node);
         return "stlbAdminNodeInfo";
     }
+    @RequestMapping(value = "/nodeInfoFragment-{nodeId}", method = RequestMethod.GET)
+    private String nodeInfoPageFragment(@PathVariable("nodeId") String nodeId, Model m) {
+        Node node = nodeConfigsConteiner.getNodeById(nodeId);
+        m.addAttribute("node", node);
+        return "stlbAdminNodeInfoFragment";
+    }
+
+    @RequestMapping(value = "/nodeLoading-{nodeId}", method = RequestMethod.GET)
+    private String nodeLoadingPage(@PathVariable("nodeId") String nodeId, Model m) {
+        Node node = nodeConfigsConteiner.getNodeById(nodeId);
+        m.addAttribute("node", node);
+        return "stlbAdminNodeLoading";
+    }
+
+    @RequestMapping(value = "/setInterval-{nodeId}", method = RequestMethod.POST)
+    private String setInterval(@PathVariable("nodeId") String nodeId, Model m, @RequestParam("interval") String interval) {
+        Node node = nodeConfigsConteiner.getNodeById(nodeId);
+        Integer intervall = Integer.valueOf(interval);
+        adminService.setNodeInterval(node, intervall);
+        m.addAttribute("node", node);
+        return "redirect:nodeInfo-"+node.getNodeId();
+    }
 
     @RequestMapping(value = "/config", method = RequestMethod.GET)
     private String configPage(Model m) {

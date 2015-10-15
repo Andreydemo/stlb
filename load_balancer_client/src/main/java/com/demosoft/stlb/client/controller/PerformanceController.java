@@ -4,18 +4,19 @@ import com.demosoft.stlb.client.bean.STLBInfoRequest;
 import com.demosoft.stlb.client.bean.STLBInfoResponse;
 import com.demosoft.stlb.client.bean.STLBRequest;
 import com.demosoft.stlb.client.bean.STLBResponse;
+import com.demosoft.stlb.client.scheduler.NodeStatisticTask;
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryonet.Client;
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
-import javax.management.Attribute;
-import javax.management.AttributeList;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -29,6 +30,10 @@ public class PerformanceController {
     private Kryo kryo = client.getKryo();
     private Map<String, STLBResponse> lastReponses = new HashMap<>();
     public static final long timeout = 5000;
+    private String ownNodeId;
+
+    @Autowired
+    private NodeStatisticTask nodeStatisticTask;
 
     public PerformanceController() {
         kryo.register(STLBRequest.class);
@@ -117,5 +122,13 @@ public class PerformanceController {
                 lastReponses.put(response.getId(), response);
             }
         }
+    }
+
+    public String getOwnNodeId() {
+        return ownNodeId;
+    }
+
+    public void setOwnNodeId(String ownNodeId) {
+        this.ownNodeId = ownNodeId;
     }
 }

@@ -14,6 +14,8 @@ public class STLBInfoRequest implements Serializable {
     private URI loadBalancerURI;
     private String from;
     private String id;
+    private String ownNodeId;
+    private int interval =  -1;
 
     public STLBInfoRequest() {
         id = UUID.randomUUID().toString();
@@ -41,5 +43,21 @@ public class STLBInfoRequest implements Serializable {
 
     public void setFrom(String from) {
         this.from = from;
+    }
+
+    public int getInterval() {
+        return interval;
+    }
+
+    public void setInterval(int interval) {
+        this.interval = interval;
+    }
+
+    public String getOwnNodeId() {
+        return ownNodeId;
+    }
+
+    public void setOwnNodeId(String ownNodeId) {
+        this.ownNodeId = ownNodeId;
     }
 }

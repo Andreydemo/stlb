@@ -38,15 +38,10 @@ public class NodeInfoConnectionClient {
     }
 
 
-    public boolean connectToNode(URI loadBalancerURI, URI nodeURI) {
-        STLBInfoRequest request = new STLBInfoRequest();
-        request.setLoadBalancerURI(loadBalancerURI);
-        request.setFrom("Load balancer");
+    private boolean sendRequest(STLBInfoRequest request, String host) {
         try {
             client.start();
-            System.out.println("connection to: " + nodeURI.getHost() + ":" + STLBInfoServer.infoPort);
-            client.connect(5000, nodeURI.getHost(), STLBInfoServer.infoPort);
-            System.out.println("connected to: " + nodeURI.getHost() + ":" + STLBInfoServer.infoPort);
+            client.connect(5000, host, STLBInfoServer.infoPort);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -56,7 +51,7 @@ public class NodeInfoConnectionClient {
         while (stlbResponse == null) {
             stlbResponse = lastReponses.remove(request.getId());
             if (System.currentTimeMillis() - time > timeout) {
-                System.out.println("time out for " + nodeURI.getHost());
+                System.out.println("time out for " + host);
                 break;
             }
         }
@@ -66,6 +61,22 @@ public class NodeInfoConnectionClient {
         }
         System.out.println("stlbResponse.isSuccess() " + stlbResponse.isSuccess());
         return stlbResponse.isSuccess();
+    }
+
+
+    public boolean connectToNode(URI loadBalancerURI, URI nodeURI,String ownId) {
+        STLBInfoRequest request = new STLBInfoRequest();
+        request.setLoadBalancerURI(loadBalancerURI);
+        request.setFrom("Load balancer");
+        request.setOwnNodeId(ownId);
+        return sendRequest(request,nodeURI.getHost());
+    }
+
+    public boolean setNodeInterval(URI nodeURL, int interval) {
+        STLBInfoRequest request = new STLBInfoRequest();
+        request.setFrom("Load balancer");
+        request.setInterval(interval);
+        return sendRequest(request,nodeURL.getHost());
     }
 
     class NodeConncetionListener extends Listener {

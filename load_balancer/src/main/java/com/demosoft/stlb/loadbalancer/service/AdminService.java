@@ -37,6 +37,9 @@ public class AdminService {
     @Autowired
     private NodeDbAccessObject nodeDbAccessObject;
 
+    @Autowired
+    private NodeInfoConnectionClient connectionClient;
+
     private final Logger log = LoggerFactory.getLogger(this.getClass());
 
     public void getAdminPage(Model model) {
@@ -77,7 +80,7 @@ public class AdminService {
         }
     }
 
-    public void switchNodeStatus(String nodeId,boolean enabled) {
+    public void switchNodeStatus(String nodeId, boolean enabled) {
         nodeConfigsConteiner.getNodeById(nodeId).setEnabled(enabled);
     }
 
@@ -100,7 +103,18 @@ public class AdminService {
             e.printStackTrace();
         }
         nodeDbAccessObject.addNode(newNode);
-        newNode.setInfoConnection(statisticsReceiver.connectToNode(newNode.getBalancerURI(), uri));
+        newNode.setInfoConnection(statisticsReceiver.connectToNode(newNode.getBalancerURI(), uri, newNode.getNodeId()));
+    }
+
+    public void setNodeInterval(Node node, int inteval) {
+        try {
+            URI nodeuUri = new URI(node.getUrl());
+            if (connectionClient.setNodeInterval(nodeuUri, inteval)) {
+                node.setInterval(inteval);
+            }
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+        }
     }
 
     class UpdateStatusTask implements Runnable {
@@ -151,7 +165,7 @@ public class AdminService {
                 } catch (URISyntaxException e) {
                     e.printStackTrace();
                 }
-                node.setInfoConnection(statisticsReceiver.connectToNode(node.getBalancerURI(), uri));
+                node.setInfoConnection(statisticsReceiver.connectToNode(node.getBalancerURI(), uri, node.getNodeId()));
             }
         }
     }

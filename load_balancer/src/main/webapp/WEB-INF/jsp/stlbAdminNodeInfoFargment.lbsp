@@ -3,45 +3,8 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Admin | View Nodes</title>
-    <link rel="stylesheet" type="text/css" href="/stlb/bower_components/normalize-css/normalize.css"/>
-    <link rel="stylesheet" type="text/css" href="/stlb/bower_components/semantic/dist/semantic.css"/>
 </head>
 <body>
-<main class="ui container">
-    <div class="ui stackable inverted container menu">
-        <a href="/stlb" class="item">Admin</a>
-        <a href="/stlb/viewNodes" class="item">View Nodes</a>
-        <a href="/stlb/config" class="item">Configurations</a>
-        <a href="/" class="item">Site</a>
-    </div>
-    <div class="ui large breadcrumb">
-        <a href="/stlb">Admin</a>
-        <i class="right chevron icon divider"></i>
-        <a href="/stlb/viewNodes">View Nodes</a>
-        <i class="right chevron icon divider"></i>
-
-        <div class="active section">Node Info - ${node.nodeId}</div>
-        <a href="nodeLoading-${node.nodeId}">Loading content</a>
-    </div>
-    <section id="content" class="ui raised segment">
-    <input type="hidden" value="${node.nodeId}" id="nodeId">
-        <c:choose>
-            <c:when test="${node.available}">
-                <c:set var="labelClass" value="green" scope="request"/>
-            </c:when>
-            <c:otherwise>
-                <c:set var="labelClass" value="red" scope="request"/>
-            </c:otherwise>
-        </c:choose>
-        <a href="${node.url}" class="ui ${labelClass} ribbon label">
-            ${node.name}
-        </a>
-        <div class="ui top attached tabular menu">
-            <a class="item active" data-tab="first">Info</a>
-            <a class="item" data-tab="second">Loading</a>
-        </div>
-        <div class="ui bottom attached tab segment active" data-tab="first" id="first-tab">
 
         <table class="ui striped right aligned table">
             <thead>
@@ -128,36 +91,6 @@
                 </c:forEach>
             </div>
         </c:if>
-        </div>
-        <div class="ui bottom attached tab segment" data-tab="second" id="second-tab">
-            <table class="ui striped right aligned table">
-                <thead>
-                <th class="left aligned">Date</th>
-                <th class="left aligned">processCpuLoad</th>
-                <th class="left aligned">systemCpuLoad</th>
-                <th class="left aligned">processCpuTime</th>
-                <th class="left aligned">freePhysicalMemorySize</th>
-                <th class="left aligned">totalPhysicalMemorySize</th>
-                </thead>
-                <tbody>
-                <c:forEach items="${node.systemReports}" var="report">
-                    <tr>
-                        <td class="left aligned">${report.reportDate}</td>
-                        <td class="left aligned">${report.processCpuLoad}</td>
-                        <td class="left aligned">${report.systemCpuLoad}</td>
-                        <td class="left aligned">${report.processCpuTime}</td>
-                        <td class="left aligned">${report.freePhysicalMemorySize}</td>
-                        <td class="left aligned">${report.totalPhysicalMemorySize}</td>
-                    </tr>
-                </c:forEach>
 
-                </tbody>
-            </table>
-        </div>
-    </section>
-</main>
 </body>
-<script src="/stlb/bower_components/jquery/dist/jquery.min.js"></script>
-<script src="/stlb/bower_components/semantic/dist/semantic.js"></script>
-<script src="/stlb/js/main.js"></script>
 </html>
