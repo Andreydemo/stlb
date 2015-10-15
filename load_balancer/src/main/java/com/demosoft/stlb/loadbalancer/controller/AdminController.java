@@ -84,6 +84,12 @@ public class AdminController {
         m.addAttribute("node", node);
         return "stlbAdminNodeLoading";
     }
+    @RequestMapping(value = "/cpuGraph-{nodeId}", method = RequestMethod.GET)
+    private String nodeCpuGraph(@PathVariable("nodeId") String nodeId, Model m) {
+        Node node = nodeConfigsConteiner.getNodeById(nodeId);
+        m.addAttribute("node", node);
+        return "stlbAdminNodeCpuGraph";
+    }
 
     @RequestMapping(value = "/setInterval-{nodeId}", method = RequestMethod.POST)
     private String setInterval(@PathVariable("nodeId") String nodeId, Model m, @RequestParam("interval") String interval) {

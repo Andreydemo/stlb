@@ -56,6 +56,16 @@
                                     }
                                    });
                                  },
+
+                          third : function(){
+                                                                                       $.ajax({
+                                                                                              url: '/stlb/cpuGraph-' + $("#nodeId").val(),
+                                                                                               success: function(data) {
+                                                                                               $('#third-tab').html(data);
+                                                                                               }
+                                                                                              });}
+
+
                         };
                         return response[settings.urlData.tab];
                       }
@@ -65,4 +75,38 @@
                     path    : '/'
                   })
                 ;
+
+
+
+                 $('#container').highcharts({
+                        chart: {
+                            type: 'bar'
+                        },
+                        title: {
+                            text: 'Fruit Consumption'
+                        },
+                        xAxis: {
+                            categories: ['Apples', 'Bananas', 'Oranges']
+                        },
+                        yAxis: {
+                            title: {
+                                text: 'Fruit eaten'
+                            }
+                        },
+                        series: [{
+                            name: 'Jane',
+                            data: [1, 0, 4]
+                        }, {
+                            name: 'John',
+                            data: [5, 7, 3]
+                        }]
+                    });
+
+
+
+
+
+
+
+
 })();
