@@ -25,8 +25,8 @@ public class SystemReport {
         this.processCpuLoad =((int)(stlbRequest.getProcessCpuLoad() * 10000) / 100.0);
         this.systemCpuLoad = ((int)(stlbRequest.getSystemCpuLoad() * 10000) / 100.0);
         this.processCpuTime = stlbRequest.getProcessCpuTime();
-        this.freePhysicalMemorySize = stlbRequest.getFreePhysicalMemorySize();
-        this.totalPhysicalMemorySize = stlbRequest.getTotalPhysicalMemorySize();
+        this.freePhysicalMemorySize = stlbRequest.getFreePhysicalMemorySize() / (1024 * 1024);
+        this.totalPhysicalMemorySize = stlbRequest.getTotalPhysicalMemorySize() / (1024 * 1024) ;
         this.reportDate = new Date();
     }
 
