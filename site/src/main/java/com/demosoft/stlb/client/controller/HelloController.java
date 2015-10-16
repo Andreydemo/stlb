@@ -23,13 +23,19 @@ public class HelloController {
     @RequestMapping("/")
     public String index(HttpSession session, Model model) {
         model.addAttribute("sessionId", session.getId());
-        model.addAttribute("sessionId", session.getId());
+        String hostname, serverAddress;
+        hostname = "error";
+        serverAddress = "error";
         try {
-            model.addAttribute("host",  InetAddress.getLocalHost().toString());
-
+            InetAddress inetAddress;
+            inetAddress = InetAddress.getLocalHost();
+            hostname = inetAddress.getHostName();
+            serverAddress = inetAddress.toString();
         } catch (UnknownHostException e) {
             e.printStackTrace();
         }
+        model.addAttribute("host", serverAddress);
+
         System.out.println("sessionBean" + sessionBean);
         long time = System.currentTimeMillis() * System.currentTimeMillis() * System.currentTimeMillis();
 
