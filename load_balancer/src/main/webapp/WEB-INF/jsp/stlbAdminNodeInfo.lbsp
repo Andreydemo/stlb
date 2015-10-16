@@ -4,6 +4,7 @@
 <html>
 <head>
     <title>Admin | View Nodes</title>
+    <link rel="stylesheet" type="text/css" href="/stlb/css/common.css"/>
     <link rel="stylesheet" type="text/css" href="/stlb/bower_components/normalize-css/normalize.css"/>
     <link rel="stylesheet" type="text/css" href="/stlb/bower_components/semantic/dist/semantic.css"/>
 </head>
@@ -85,8 +86,18 @@
                         </c:when>
                         <c:otherwise>
                             <i class="circular plug icon inverted red"></i>
+
+                            <button class="ui icon button basic" id="reconnect">
+                                <i class="refresh icon"></i>
+                            </button>
                         </c:otherwise>
                     </c:choose>
+                <div class="ui progress success hidden" data-percent="0" id="connection-bar">
+                    <div class="bar" style="transition-duration: 1000ms; width: 0%;">
+                        <div class="progress">0%</div>
+                    </div>
+                    <!--<div class="label">Everything worked, your file is all ready.</div>-->
+                </div>
                 </td>
             </tr>
             <tr>
@@ -149,4 +160,37 @@
 <script src="/stlb/bower_components/jquery/dist/jquery.min.js"></script>
 <script src="/stlb/bower_components/semantic/dist/semantic.js"></script>
 <script src="/stlb/js/main.js"></script>
+<script>
+
+
+                        $( "#reconnect" ).click(function() {
+                         $('#connection-bar').progress({
+                              percent: 0
+                            });
+                            alert( "Handler for .click() called." );
+                            console.log("azazaz");
+                            var percentage = 0;
+                            $("#connection-bar").removeClass("hidden");
+                            setInterval(function() {
+                            if(percentage < 100){
+                            percentage+=10;
+                            if(percentage > 100){
+                            percentage = 100;
+                            }
+                            $('#connection-bar').progress({
+                              percent: percentage
+                            });
+
+                             } else {
+
+                             $("#connection-bar").removeClass("success");
+                             $("#connection-bar").addClass("error");
+                                setTimeout('$("#connection-bar").addClass("hidden")', 2000)
+
+                             }
+
+                             }, 100);
+                        });
+
+                    </script>
 </html>
