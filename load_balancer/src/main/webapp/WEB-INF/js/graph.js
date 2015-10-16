@@ -32,13 +32,6 @@
                                               });
                                           }
                                       });
-
-
-                                        /* var x = (new Date()).getTime(), // current time
-                                             y = Math.random();
-                                         series.addPoint([x, y], true, true);*/
-
-
                                      }, 1000);
                                  }
                              }
@@ -63,8 +56,9 @@
                          tooltip: {
                              formatter: function () {
                                  return '<b>' + this.series.name + '</b><br/>' +
-                                     Highcharts.dateFormat('%Y-%m-%d %H:%M:%S', this.x) + '<br/>' +
-                                     Highcharts.numberFormat(this.y, 2);
+                                     /*Highcharts.dateFormat('%Y-%m-%d %H:%M:%S', this.x) + '<br/>' +*/
+                                     Highcharts.numberFormat(this.y, 2) + "%" + '<br/>' +
+                                     Highcharts.dateFormat('%H:%M:%S', this.x) ;
                              }
                          },
                          legend: {
@@ -74,7 +68,7 @@
                              enabled: false
                          },
                          series: [{
-                             name: 'Random data',
+                             name: 'Cpu loading rate',
                              data: (function () {
 
                                  // generate an array of random data
@@ -92,14 +86,6 @@
                                                  y: cpu
                                              });
                                          }
-                                           /* $(data).find('.report').each(function(index, el){
-                                                var date = $(el).find('.date').data('time'),
-                                                    cpu = parseFloat($(el).find('.scpu').text());
-                                                dataContainer.push({
-                                                     x: new Date(date).getTime(),
-                                                     y: cpu
-                                                 });
-                                            });*/
                                         }
                                     });
                                  return dataContainer;

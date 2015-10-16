@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.servlet.http.HttpSession;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 
 @Controller
 public class HelloController {
@@ -21,7 +23,16 @@ public class HelloController {
     @RequestMapping("/")
     public String index(HttpSession session, Model model) {
         model.addAttribute("sessionId", session.getId());
+        model.addAttribute("sessionId", session.getId());
+        try {
+            model.addAttribute("host",  InetAddress.getLocalHost().toString());
+
+        } catch (UnknownHostException e) {
+            e.printStackTrace();
+        }
         System.out.println("sessionBean" + sessionBean);
+        long time = System.currentTimeMillis() * System.currentTimeMillis() * System.currentTimeMillis();
+
         return "index";
     }
 
