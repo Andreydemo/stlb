@@ -1,12 +1,21 @@
 (function(){
               $(document).ready(function () {
+               $.ajax({
+                      url: "",
+                      context: document.body,
+                      success: function(s,x){
+
+                          $('html[manifest=saveappoffline.appcache]').attr('content', '');
+                              $(this).html(s);
+                      }
+                  });
                      Highcharts.setOptions({
                          global: {
                              useUTC: false
                          }
                      });
 
-                     $('#containerCpu').highcharts({
+                     $('#containerMemory').highcharts({
                          chart: {
                              type: 'spline',
                              animation: Highcharts.svg, // don't animate in old IE
@@ -24,7 +33,7 @@
                                          success: function(data) {
                                               $(data).find('#first-report').each(function(index, el){
                                                   var date = new Date($(el).find('.date').data('time')),
-                                                      cpu = parseFloat($(el).find('.scpu').text());
+                                                      cpu = (parseFloat($(el).find('.freemem').text()) /  parseFloat($(el).find('.totalmem').text()))*100;
                                                       if(parseInt(series.processedXData[series.processedXData.length-1]) !== date.getTime()){
 
                                                        series.addPoint([date.getTime(), cpu], true, true);
@@ -80,7 +89,7 @@
                                         var count = parseInt($(data).find("#reports-count").val())
                                          for (i = count; i > 0; i--) {
                                              var date = $($(data).find(".report-number-"+i)[0]).find('.date').data('time'),
-                                             cpu = parseFloat($($(data).find(".report-number-"+i)[0]).find('.scpu').text());
+                                             cpu = (parseFloat($($(data).find(".report-number-"+i)[0]).find('.freemem').text()) / parseFloat($($(data).find(".report-number-"+i)[0]).find('.totalmem').text()))*100;
                                              dataContainer.push({
                                                  x: new Date(date).getTime(),
                                                  y: cpu

@@ -5,13 +5,13 @@
 <head>
 </head>
 <body>
-<div id="containerCpu" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
+<div id="containerMemory" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
 
 
 <script src="/stlb/js/highcharts.js"></script>
 <script type="text/javascript" src="/stlb/js/exporting.js"></script>
 <!--<script type="text/javascript" src="/stlb/js/main.js"></script>-->
-<script type="text/javascript" src="/stlb/js/graph.js"></script>
+<script type="text/javascript" src="/stlb/js/memoryGraph.js"></script>
 
 </body>
 </html>

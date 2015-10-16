@@ -90,6 +90,19 @@ public class AdminController {
         m.addAttribute("node", node);
         return "stlbAdminNodeCpuGraph";
     }
+    @RequestMapping(value = "/cpuProcessGraph-{nodeId}", method = RequestMethod.GET)
+    private String nodeCpuProcessGraph(@PathVariable("nodeId") String nodeId, Model m) {
+        Node node = nodeConfigsConteiner.getNodeById(nodeId);
+        m.addAttribute("node", node);
+        return "stlbAdminNodeCpuProcessGraph";
+    }
+
+    @RequestMapping(value = "/memoryGraph-{nodeId}", method = RequestMethod.GET)
+    private String nodeMemoryGraph(@PathVariable("nodeId") String nodeId, Model m) {
+        Node node = nodeConfigsConteiner.getNodeById(nodeId);
+        m.addAttribute("node", node);
+        return "stlbAdminNodeMemoryGraph";
+    }
 
     @RequestMapping(value = "/setInterval-{nodeId}", method = RequestMethod.POST)
     private String setInterval(@PathVariable("nodeId") String nodeId, Model m, @RequestParam("interval") String interval) {

@@ -58,12 +58,26 @@
                                  },
 
                           third : function(){
-                                                                                       $.ajax({
-                                                                                              url: '/stlb/cpuGraph-' + $("#nodeId").val(),
-                                                                                               success: function(data) {
-                                                                                               $('#third-tab').html(data);
-                                                                                               }
-                                                                                              });}
+                           $.ajax({
+                                  url: '/stlb/cpuGraph-' + $("#nodeId").val(),
+                                   success: function(data) {
+                                   $('#third-tab').html(data);
+                                   }
+                                  });},
+                          fifth : function(){
+                             $.ajax({
+                                    url: '/stlb/cpuProcessGraph-' + $("#nodeId").val(),
+                                     success: function(data) {
+                                     $('#fifth-tab').html(data);
+                                     }
+                                    });},
+                            forth : function(){
+                                 $.ajax({
+                                        url: '/stlb/memoryGraph-' + $("#nodeId").val(),
+                                         success: function(data) {
+                                         $('#forth-tab').html(data);
+                                         }
+                                        });}
 
 
                         };
