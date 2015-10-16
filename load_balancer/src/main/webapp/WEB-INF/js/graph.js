@@ -16,7 +16,6 @@
 
                                      // set up the updating of the chart each second
                                      var series = this.series[0];
-                                     var oldDate = null;
                                      setInterval(function () {
 
                                       $.ajax({
@@ -26,11 +25,10 @@
                                               $(data).find('#first-report').each(function(index, el){
                                                   var date = new Date($(el).find('.date').data('time')),
                                                       cpu = parseFloat($(el).find('.scpu').text());
-                                                      if(oldDate == null ||  oldDate.getTime() !== date.getTime()){
-                                                      alert(oldDate + " " + date)
+                                                      if(parseInt(series.processedXData[series.processedXData.length-1]) !== date.getTime()){
+
                                                        series.addPoint([date.getTime(), cpu], true, true);
                                                        }
-                                                       oldDate = date;
                                               });
                                           }
                                       });
