@@ -17,9 +17,25 @@
                                      // set up the updating of the chart each second
                                      var series = this.series[0];
                                      setInterval(function () {
-                                         var x = (new Date()).getTime(), // current time
+
+                                      $.ajax({
+                                         url: '/stlb/nodeLoading-' + $("#nodeId").val(),
+                                          async:false,
+                                         success: function(data) {
+                                              $(data).find('#first-report').each(function(index, el){
+                                                  var date = $(el).find('.date').data('time'),
+                                                      cpu = parseFloat($(el).find('.scpu').text());
+                                                       series.addPoint([new Date(date).getTime(), cpu], true, true);
+                                              });
+                                          }
+                                      });
+
+
+                                        /* var x = (new Date()).getTime(), // current time
                                              y = Math.random();
-                                         series.addPoint([x, y], true, true);
+                                         series.addPoint([x, y], true, true);*/
+
+
                                      }, 1000);
                                  }
                              }
@@ -57,18 +73,33 @@
                          series: [{
                              name: 'Random data',
                              data: (function () {
-                                 // generate an array of random data
-                                 var data = [],
-                                     time = (new Date()).getTime(),
-                                     i;
 
-                                 for (i = -19; i <= 0; i += 1) {
-                                     data.push({
-                                         x: time + i * 1000,
-                                         y: Math.random()
-                                     });
-                                 }
-                                 return data;
+                                 // generate an array of random data
+                                 var dataContainer = [],  i;
+                                    $.ajax({
+                                       url: '/stlb/nodeLoading-' + $("#nodeId").val(),
+                                       async:false,
+                                       success: function(data) {
+                                        var count = parseInt($(data).find("#reports-count").val())
+                                         for (i = count; i > 0; i--) {
+                                             var date = $($(data).find(".report-number-"+i)[0]).find('.date').data('time'),
+                                             cpu = parseFloat($($(data).find(".report-number-"+i)[0]).find('.scpu').text());
+                                             dataContainer.push({
+                                                 x: new Date(date).getTime(),
+                                                 y: cpu
+                                             });
+                                         }
+                                           /* $(data).find('.report').each(function(index, el){
+                                                var date = $(el).find('.date').data('time'),
+                                                    cpu = parseFloat($(el).find('.scpu').text());
+                                                dataContainer.push({
+                                                     x: new Date(date).getTime(),
+                                                     y: cpu
+                                                 });
+                                            });*/
+                                        }
+                                    });
+                                 return dataContainer;
                              }())
                          }]
                      });

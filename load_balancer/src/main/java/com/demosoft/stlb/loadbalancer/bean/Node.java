@@ -3,10 +3,7 @@ package com.demosoft.stlb.loadbalancer.bean;
 import java.lang.ref.WeakReference;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * Created by Andrii_Korkoshko on 17.09.2015.
@@ -25,6 +22,8 @@ public class Node {
     private boolean enabled = true;
     private int interval = -1;
     private List<SystemReport> systemReports = new ArrayList<>();
+    private int maxCountSavedSystemReports = 20;
+
 
     private List<WeakReference<SessionConnection>> connections = new ArrayList<WeakReference<SessionConnection>>();
 
@@ -201,6 +200,21 @@ public class Node {
     }
 
     public boolean addSystemReport(SystemReport systemReport) {
-        return systemReports.add(systemReport);
+        if(systemReports.size() == maxCountSavedSystemReports){
+            systemReports.remove(maxCountSavedSystemReports -1 );
+        }
+        boolean result = systemReports.add(systemReport);
+        Collections.sort(systemReports, SystemReport.defaultComporator);
+        return result;
     }
+
+    public int getMaxCountSavedSystemReports() {
+        return maxCountSavedSystemReports;
+    }
+
+    public void setMaxCountSavedSystemReports(int maxCountSavedSystemReports) {
+        this.maxCountSavedSystemReports = maxCountSavedSystemReports;
+    }
+
+
 }

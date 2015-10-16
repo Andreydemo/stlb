@@ -2,12 +2,14 @@ package com.demosoft.stlb.loadbalancer.bean;
 
 import com.demosoft.stlb.client.bean.STLBRequest;
 
+import java.util.Comparator;
 import java.util.Date;
 
 /**
  * Created by Andrii_Korkoshko on 15.10.2015.
  */
 public class SystemReport {
+    public static final SystemReportComporator defaultComporator = new SystemReportComporator();
 
     private Double processCpuLoad;
     private Double systemCpuLoad;
@@ -76,5 +78,19 @@ public class SystemReport {
 
     public void setReportDate(Date reportDate) {
         this.reportDate = reportDate;
+    }
+
+    static class SystemReportComporator implements Comparator<SystemReport> {
+
+        @Override
+        public int compare(SystemReport o1, SystemReport o2) {
+            if (o1.getReportDate().after(o2.getReportDate())) {
+                return -1;
+            }
+            if (o1.getReportDate().before(o2.getReportDate())) {
+                return 1;
+            }
+            return 0;
+        }
     }
 }
