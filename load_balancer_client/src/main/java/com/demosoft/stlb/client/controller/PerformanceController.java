@@ -4,8 +4,10 @@ import com.demosoft.stlb.client.bean.STLBInfoRequest;
 import com.demosoft.stlb.client.bean.STLBInfoResponse;
 import com.demosoft.stlb.client.bean.STLBRequest;
 import com.demosoft.stlb.client.bean.STLBResponse;
+import com.demosoft.stlb.client.collection.SimpleMap;
 import com.demosoft.stlb.client.scheduler.NodeStatisticTask;
 import com.esotericsoftware.kryo.Kryo;
+import com.esotericsoftware.kryo.serializers.MapSerializer;
 import com.esotericsoftware.kryonet.Client;
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
@@ -16,7 +18,6 @@ import javax.annotation.PostConstruct;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -36,12 +37,19 @@ public class PerformanceController {
     private NodeStatisticTask nodeStatisticTask;
 
     public PerformanceController() {
+        kryo.setRegistrationRequired(false);
         kryo.register(STLBRequest.class);
         kryo.register(STLBResponse.class);
         kryo.register(STLBInfoRequest.class);
         kryo.register(STLBInfoResponse.class);
-        kryo.register(Map.class);
-        kryo.register(HashMap.class);
+        kryo.register(SimpleMap.class);
+        MapSerializer mapSerializer = new MapSerializer();
+        kryo.register(Map.class, mapSerializer);
+        kryo.register(HashMap.class, mapSerializer);
+
+        mapSerializer.setKeyClass(String.class, kryo.getSerializer(String.class));
+        mapSerializer.setValueClass(Double.class, kryo.getSerializer(Double.class));
+
         //kryo.register(STLBRequest.RequestType.class);
         kryo.register(URI.class);
         client.addListener(new PerformanceControllerListener());

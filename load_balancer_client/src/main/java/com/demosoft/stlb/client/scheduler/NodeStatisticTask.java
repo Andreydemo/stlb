@@ -1,6 +1,7 @@
 package com.demosoft.stlb.client.scheduler;
 
 import com.demosoft.stlb.client.bean.STLBRequest;
+import com.demosoft.stlb.client.bean.SessionBean;
 import com.demosoft.stlb.client.controller.PerformanceController;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -28,6 +29,8 @@ public class NodeStatisticTask {
 
     int interval = 10000;
 
+    int sessionLoadLevelCalculationInterval = interval * 3;
+
     public NodeStatisticTask() {
         mbs = ManagementFactory.getPlatformMBeanServer();
         try {
@@ -52,6 +55,7 @@ public class NodeStatisticTask {
         request.setTotalPhysicalMemorySize((Long) map.get(SystemParams.TotalPhysicalMemorySize.toString()));
         request.setInterval(interval);
         request.setOwnNodeId(performanceController.getOwnNodeId());
+        request.setSessionsLoadings(SessionBean.generateReport());
         performanceController.sendNodeStatistic(request);
         System.out.println(this.getClass() + " was performed");
     }
@@ -82,5 +86,13 @@ public class NodeStatisticTask {
 
     public void setInterval(int interval) {
         this.interval = interval;
+    }
+
+    public int getSessionLoadLevelCalculationInterval() {
+        return sessionLoadLevelCalculationInterval;
+    }
+
+    public void setSessionLoadLevelCalculationInterval(int sessionLoadLevelCalculationInterval) {
+        this.sessionLoadLevelCalculationInterval = sessionLoadLevelCalculationInterval;
     }
 }

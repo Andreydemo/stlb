@@ -24,6 +24,9 @@ public class PerformanceMonitorAspect {
         Object retVal = pjp.proceed();
         time = System.currentTimeMillis() - time;
         sessionBean.addActiveTime(time);
+        if(sessionBean.getSessionId() == null) {
+           sessionBean.accomulateSessionId();
+        }
         return retVal;
     }
 }

@@ -1,7 +1,11 @@
 package com.demosoft.stlb.client.bean;
 
+import com.demosoft.stlb.client.collection.SimpleMap;
+
 import java.io.Serializable;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 
 /**
@@ -21,6 +25,8 @@ public class STLBRequest implements Serializable {
     private Long totalPhysicalMemorySize;
     private int interval;
     private String ownNodeId;
+
+    private SimpleMap<String, Double> sessionsLoadings = new SimpleMap<>();
 
 
     private String requestType;
@@ -101,4 +107,12 @@ public class STLBRequest implements Serializable {
         this.ownNodeId = ownNodeId;
     }
 
+    public Map<String, Double> getSessionsLoadings() {
+        return sessionsLoadings;
+        //return null;
+    }
+
+    public void setSessionsLoadings(Map<String, Double> sessionsLoadings) {
+        this.sessionsLoadings = (SimpleMap<String, Double>) sessionsLoadings;
+    }
 }

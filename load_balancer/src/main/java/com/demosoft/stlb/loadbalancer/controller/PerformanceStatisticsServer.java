@@ -4,10 +4,12 @@ import com.demosoft.stlb.client.bean.STLBInfoRequest;
 import com.demosoft.stlb.client.bean.STLBInfoResponse;
 import com.demosoft.stlb.client.bean.STLBRequest;
 import com.demosoft.stlb.client.bean.STLBResponse;
+import com.demosoft.stlb.client.collection.SimpleMap;
 import com.demosoft.stlb.loadbalancer.bean.Node;
 import com.demosoft.stlb.loadbalancer.bean.NodeConfigsConteiner;
 import com.demosoft.stlb.loadbalancer.bean.SystemReport;
 import com.esotericsoftware.kryo.Kryo;
+import com.esotericsoftware.kryo.serializers.MapSerializer;
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
 import com.esotericsoftware.kryonet.Server;
@@ -37,13 +39,19 @@ public class PerformanceStatisticsServer {
     private Kryo kryo = server.getKryo();
 
     public PerformanceStatisticsServer() {
+        kryo.setRegistrationRequired(false);
         kryo.register(STLBRequest.class);
         kryo.register(STLBResponse.class);
         kryo.register(STLBInfoRequest.class);
         kryo.register(STLBInfoResponse.class);
+        kryo.register(SimpleMap.class);
         kryo.register(URI.class);
-        kryo.register(Map.class);
-        kryo.register(HashMap.class);
+        MapSerializer mapSerializer = new MapSerializer();
+        kryo.register(Map.class, mapSerializer);
+        kryo.register(HashMap.class, mapSerializer);
+
+        mapSerializer.setKeyClass(String.class, kryo.getSerializer(String.class));
+        mapSerializer.setValueClass(Double.class, kryo.getSerializer(Double.class));
         server.start();
         server.addListener(new NodeStatisticListener());
 
