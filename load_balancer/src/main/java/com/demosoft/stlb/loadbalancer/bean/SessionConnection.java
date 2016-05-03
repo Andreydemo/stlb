@@ -22,6 +22,7 @@ public class SessionConnection {
     private String nodeJSessionId;
     private Boolean expired = false;
     private Date lastActivity;
+    private Double activity = -1.0;
 
     public Node getNode() {
         return node;
@@ -65,7 +66,15 @@ public class SessionConnection {
         this.lastActivity = lastActivity;
     }
 
-    public void updateActivity(){
+    public void updateActivity() {
         this.lastActivity = new Date();
+    }
+
+    public Double getActivity() {
+        return activity;
+    }
+
+    public void setActivity(Double activity) {
+        this.activity = activity;
     }
 }

@@ -86,9 +86,11 @@ public class SessionBean {
 
     public static Map<String, Double> generateReport() {
         Map<String, Double> report = new SimpleMap<>();
+        System.out.println("--Generating report--");
         for (SessionBean sessionBean : sessionBeanRegister) {
             if (sessionBean.getSessionId() != null) {
                 report.put(sessionBean.getSessionId(), sessionBean.getCurrentLoadLevel());
+                System.out.println("report; session: " + sessionBean.getSessionId() + "; load: " + sessionBean.getCurrentLoadLevel());
             }
         }
         return report;

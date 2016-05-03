@@ -27,6 +27,7 @@ public class Node {
 
 
     private List<WeakReference<SessionConnection>> connections = new ArrayList<WeakReference<SessionConnection>>();
+    private Map<String, WeakReference<SessionConnection>> connectionsByNodeSessionId = new HashMap<String,WeakReference<SessionConnection>>();
 
     public Node() {
         name = "Node";
@@ -37,6 +38,7 @@ public class Node {
         name = nodeEntity.getName();
         nodeId = nodeEntity.getNodeId();
         lastAvailible = nodeEntity.getLastAvailible();
+        infoPort = nodeEntity.getInfoPort();
         url = nodeEntity.getUrl();
         try {
             balancerURI = new URI(nodeEntity.getBalancerURI());
@@ -76,7 +78,8 @@ public class Node {
 
     public void addConnection(SessionConnection connection) {
         filterConncections();
-        connections.add(new WeakReference<SessionConnection>(connection));
+        WeakReference<SessionConnection> reference = new WeakReference<SessionConnection>(connection);
+        connections.add(reference);
     }
 
     public int getConnectionCount() {
@@ -98,6 +101,16 @@ public class Node {
         return connections;
     }
 
+    public SessionConnection getConnectionByNodeSeesionId(String sessionId){
+        filterConncections();
+        for(WeakReference<SessionConnection> connection : connections){
+            if(connection.get().getNodeJSessionId().equalsIgnoreCase(sessionId)){
+                return connection.get();
+            }
+        }
+        return  null;
+    }
+
     public void filterConncections() {
         List<WeakReference<SessionConnection>> removingList = new ArrayList<>();
         for (WeakReference<SessionConnection> ref : connections) {
@@ -106,6 +119,11 @@ public class Node {
             }
         }
         connections.removeAll(removingList);
+        for (Map.Entry<String , WeakReference<SessionConnection>> ref : connectionsByNodeSessionId.entrySet()) {
+            if (ref.getValue().get() == null || ref.getValue().get().getExpired()) {
+                connectionsByNodeSessionId.remove(ref.getValue());
+            }
+        }
         connectionsCount = connections.size();
     }
 
@@ -169,6 +187,7 @@ public class Node {
         nodeEntity.setName(name);
         nodeEntity.setNodeId(nodeId);
         nodeEntity.setUrl(url);
+        nodeEntity.setInfoPort(infoPort);
         return nodeEntity;
     }
 

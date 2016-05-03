@@ -12,6 +12,7 @@ public class NodeEntity {
     private String nodeId;
     private String url;
     private String balancerURI;
+    private int infoPort;
 
     public String getName() {
         return name;
@@ -51,5 +52,13 @@ public class NodeEntity {
 
     public void setBalancerURI(String balancerURI) {
         this.balancerURI = balancerURI;
+    }
+
+    public int getInfoPort() {
+        return infoPort;
+    }
+
+    public void setInfoPort(int infoPort) {
+        this.infoPort = infoPort;
     }
 }
