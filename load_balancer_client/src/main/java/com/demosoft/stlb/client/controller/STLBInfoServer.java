@@ -1,8 +1,10 @@
 package com.demosoft.stlb.client.controller;
 
+import com.demosoft.stlb.client.ClientConfigContainer;
 import com.demosoft.stlb.client.bean.STLBInfoRequest;
 import com.demosoft.stlb.client.bean.STLBInfoResponse;
 import com.demosoft.stlb.client.scheduler.NodeStatisticTask;
+import com.demosoft.stlb.client.scheduler.SchedulingConfiguration;
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
@@ -10,6 +12,7 @@ import com.esotericsoftware.kryonet.Server;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.PostConstruct;
 import javax.management.AttributeList;
 import java.io.IOException;
 import java.net.URI;
@@ -20,13 +23,14 @@ import java.net.URI;
 @Component
 public class STLBInfoServer {
 
-    public static final int infoPort = 54555;
-
     @Autowired
     private PerformanceController performanceController;
 
     @Autowired
     private NodeStatisticTask nodeStatisticTask;
+
+    @Autowired
+    private ClientConfigContainer clientConfigContainer;
 
     private Server server = new Server();
 
@@ -38,9 +42,14 @@ public class STLBInfoServer {
         kryo.register(URI.class);
         kryo.register(AttributeList.class);
         server.start();
+
+    }
+
+    @PostConstruct
+    private void init(){
         try {
-            server.bind(infoPort);
-            System.out.println("Info port: " + infoPort + " binded");
+            server.bind(clientConfigContainer.getInfoPort());
+            System.out.println("Info port: " + clientConfigContainer.getInfoPort() + " binded");
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -70,4 +79,5 @@ public class STLBInfoServer {
             }
         }
     }
+
 }

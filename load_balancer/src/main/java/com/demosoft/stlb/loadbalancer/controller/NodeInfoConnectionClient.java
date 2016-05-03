@@ -3,6 +3,7 @@ package com.demosoft.stlb.loadbalancer.controller;
 import com.demosoft.stlb.client.bean.STLBInfoRequest;
 import com.demosoft.stlb.client.bean.STLBInfoResponse;
 import com.demosoft.stlb.client.controller.STLBInfoServer;
+import com.demosoft.stlb.loadbalancer.bean.Node;
 import com.demosoft.stlb.loadbalancer.bean.NodeConfigsConteiner;
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryonet.Client;
@@ -38,10 +39,11 @@ public class NodeInfoConnectionClient {
     }
 
 
-    private boolean sendRequest(STLBInfoRequest request, String host) {
+    private boolean sendRequest(STLBInfoRequest request, String host, Node node) {
+
         try {
             client.start();
-            client.connect(5000, host, STLBInfoServer.infoPort);
+            client.connect(5000, host, node.getInfoPort());
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -64,19 +66,19 @@ public class NodeInfoConnectionClient {
     }
 
 
-    public boolean connectToNode(URI loadBalancerURI, URI nodeURI,String ownId) {
+    public boolean connectToNode(URI loadBalancerURI, URI nodeURI,String ownId, Node node) {
         STLBInfoRequest request = new STLBInfoRequest();
         request.setLoadBalancerURI(loadBalancerURI);
         request.setFrom("Load balancer");
         request.setOwnNodeId(ownId);
-        return sendRequest(request,nodeURI.getHost());
+        return sendRequest(request,nodeURI.getHost(),node);
     }
 
-    public boolean setNodeInterval(URI nodeURL, int interval) {
+    public boolean setNodeInterval(URI nodeURL, int interval, Node node) {
         STLBInfoRequest request = new STLBInfoRequest();
         request.setFrom("Load balancer");
         request.setInterval(interval);
-        return sendRequest(request,nodeURL.getHost());
+        return sendRequest(request,nodeURL.getHost(),node);
     }
 
     class NodeConncetionListener extends Listener {

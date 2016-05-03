@@ -38,6 +38,7 @@ public class SchedulingConfiguration implements SchedulingConfigurer {
     @Value("${defaultBalancerPort}")
     private int defaultBalancerPort;
 
+
     @PostConstruct
     private void init() {
         System.out.println(defaultBalancerPort);
@@ -69,4 +70,13 @@ public class SchedulingConfiguration implements SchedulingConfigurer {
                 }
         );
     }
+
+    public int getDefaultBalancerPort() {
+        return defaultBalancerPort;
+    }
+
+    public void setDefaultBalancerPort(int defaultBalancerPort) {
+        this.defaultBalancerPort = defaultBalancerPort;
+    }
 }
+

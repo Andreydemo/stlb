@@ -103,13 +103,13 @@ public class AdminService {
             e.printStackTrace();
         }
         nodeDbAccessObject.addNode(newNode);
-        newNode.setInfoConnection(statisticsReceiver.connectToNode(newNode.getBalancerURI(), uri, newNode.getNodeId()));
+        newNode.setInfoConnection(statisticsReceiver.connectToNode(newNode.getBalancerURI(), uri, newNode.getNodeId(),newNode));
     }
 
     public void setNodeInterval(Node node, int inteval) {
         try {
             URI nodeuUri = new URI(node.getUrl());
-            if (connectionClient.setNodeInterval(nodeuUri, inteval)) {
+            if (connectionClient.setNodeInterval(nodeuUri, inteval,node)) {
                 node.setInterval(inteval);
             }
         } catch (URISyntaxException e) {
@@ -165,7 +165,7 @@ public class AdminService {
                 } catch (URISyntaxException e) {
                     e.printStackTrace();
                 }
-                node.setInfoConnection(statisticsReceiver.connectToNode(node.getBalancerURI(), uri, node.getNodeId()));
+                node.setInfoConnection(statisticsReceiver.connectToNode(node.getBalancerURI(), uri, node.getNodeId(),node));
             }
         }
     }

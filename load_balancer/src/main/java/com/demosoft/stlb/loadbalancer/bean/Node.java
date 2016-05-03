@@ -23,6 +23,7 @@ public class Node {
     private int interval = -1;
     private List<SystemReport> systemReports = new ArrayList<>();
     private int maxCountSavedSystemReports = 20;
+    private int infoPort;
 
 
     private List<WeakReference<SessionConnection>> connections = new ArrayList<WeakReference<SessionConnection>>();
@@ -216,5 +217,11 @@ public class Node {
         this.maxCountSavedSystemReports = maxCountSavedSystemReports;
     }
 
+    public int getInfoPort() {
+        return infoPort;
+    }
 
+    public void setInfoPort(int infoPort) {
+        this.infoPort = infoPort;
+    }
 }

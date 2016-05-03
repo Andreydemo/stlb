@@ -13,7 +13,9 @@ import javax.annotation.PostConstruct;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by Andrii_Korkoshko on 17.09.2015.
@@ -25,6 +27,15 @@ public class NodeConfigsConteiner {
 
     @Value("#{'${nodesUrls}'.split(',')}")
     private List<String> nodesUrls = new ArrayList<>();
+
+    @Value("#{'${nodes}'.split(',')}")
+    private List<String> nodeNames = new ArrayList<>();
+
+    @Value("#{PropertySplitter.map('${nodeBinding}')}")
+    private Map<String,String> nodeBinding = new HashMap<>();
+
+    @Value("#{PropertySplitter.map('${nodeInfoPorts}')}")
+    private Map<String,String> nodeInfoPorts = new HashMap<>();
 
     @Value("${defaultBalancerURI}")
     private URI defaultBalancerURI;
@@ -46,10 +57,11 @@ public class NodeConfigsConteiner {
     private void init() {
         List<Node> dbNodes = nodeDbAccessObject.fetchNodes();
         if (dbNodes == null || dbNodes.size() == 0) {
-
-            for (String url : nodesUrls) {
-                Node newNode = new Node(url);
+            for (String name : nodeNames) {
+                Node newNode = new Node(nodeBinding.get(name));
+                newNode.setName(name);
                 newNode.setBalancerURI(compileDefaultBalancerURI(defaultBalancerURI));
+                newNode.setInfoPort(Integer.parseInt(nodeInfoPorts.get(name)));
                 nodes.add(newNode);
             }
         } else {
@@ -98,5 +110,13 @@ public class NodeConfigsConteiner {
 
     public int getDefaultBalancerPort() {
         return defaultBalancerPort;
+    }
+
+    public Map<String, String> getNodeBinding() {
+        return nodeBinding;
+    }
+
+    public void setNodeBinding(Map<String, String> nodeBinding) {
+        this.nodeBinding = nodeBinding;
     }
 }
