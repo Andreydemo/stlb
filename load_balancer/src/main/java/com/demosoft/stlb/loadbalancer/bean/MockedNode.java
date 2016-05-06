@@ -5,7 +5,7 @@ package com.demosoft.stlb.loadbalancer.bean;
  */
 public class MockedNode {
 
-    private Double activityPointsPerSession;
+    private Double activityPointsPerSession = 0.0;
     private Node node;
 
     public MockedNode(Node node) {
@@ -13,7 +13,13 @@ public class MockedNode {
     }
 
     public Double getMockedActivityPoints(){
-        return node.getStrongConnections().size() * activityPointsPerSession;
+        Double points = 0.0;
+
+        if(node.getStrongConnections() != null && !node
+                .getStrongConnections().isEmpty()){
+            points =  node.getStrongConnections().size() * activityPointsPerSession;
+        }
+        return  points;
     }
 
     public Double getActivityPointsPerSession() {

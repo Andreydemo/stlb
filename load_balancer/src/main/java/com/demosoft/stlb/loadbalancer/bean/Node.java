@@ -247,6 +247,19 @@ public class Node {
         }
     }
 
+    public SessionConnection getMostActiveSession(){
+        if(getStrongConnections().isEmpty()){
+            return null;
+        }
+        SessionConnection result = getStrongConnections().get(0);
+        for(SessionConnection sessionConnection : getStrongConnections()){
+            if(result.getActivity() < sessionConnection.getActivity()){
+                result = sessionConnection;
+            }
+        }
+        return result;
+    }
+
     public int getMaxCountSavedSystemReports() {
         return maxCountSavedSystemReports;
     }
@@ -293,7 +306,13 @@ public class Node {
 
     public boolean removeSessionConnection(SessionConnection  sessionConnection){
         boolean result = false;
-        result = connections.remove(sessionConnection);
+        List<WeakReference<SessionConnection>> refsToRemove = new ArrayList<>();
+        for(WeakReference<SessionConnection> sessionConnectionWeakReference : connections){
+            if(sessionConnectionWeakReference.get() != null && sessionConnectionWeakReference.get().getNodeJSessionId().equalsIgnoreCase(sessionConnection.getNodeJSessionId())){
+                refsToRemove.add(sessionConnectionWeakReference);
+            }
+        }
+        result = connections.removeAll(refsToRemove);
         return result;
     }
 
@@ -304,7 +323,7 @@ public class Node {
         return getNodeActivityPoints() >= criticalLevel;
     }
 
-    public class CriticalComporator implements Comparator<Node>{
+    public static class CriticalComporator implements Comparator<Node>{
 
         @Override
         public int compare(Node o1, Node o2) {

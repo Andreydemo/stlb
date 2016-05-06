@@ -219,8 +219,8 @@ public class LoadBalancerHelper {
             return;
         }
         Node oldNode = sessionConnection.getNode();
-        sessionConnection.setNode(node);
         oldNode.removeSessionConnection(sessionConnection);
+        sessionConnection.setNode(node);
         node.addConnection(sessionConnection);
         getNewSessionConnectionForNode(sessionConnection,node);
 

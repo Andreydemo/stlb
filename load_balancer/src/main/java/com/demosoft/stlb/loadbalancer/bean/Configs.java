@@ -36,4 +36,8 @@ public class Configs {
         return configMap;
     }
 
+    public Integer getNodeAnaliseInterval(){
+        return (Integer) configMap.get(NODE_ANAKLISE_INTERVAL);
+    }
+
 }

@@ -10,6 +10,7 @@ import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
 import com.esotericsoftware.kryonet.Server;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
@@ -31,6 +32,9 @@ public class STLBInfoServer {
 
     @Autowired
     private ClientConfigContainer clientConfigContainer;
+
+    @Autowired
+    private ApplicationContext applicationContext;
 
     private Server server = new Server();
 
@@ -78,6 +82,10 @@ public class STLBInfoServer {
                 }
             }
         }
+    }
+
+    public void getSessinBeanBySessionId(String s){
+
     }
 
 }
