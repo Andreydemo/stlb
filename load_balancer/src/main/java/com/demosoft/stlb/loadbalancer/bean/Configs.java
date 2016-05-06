@@ -15,11 +15,13 @@ public class Configs {
 
 
     public static final String DEBUG_MODE = "debugMode";
+    public static final String NODE_ANAKLISE_INTERVAL = "nodeAnaliseInterval";
 
     Map<String, Object> configMap = new HashMap<>();
 
     public Configs() {
         configMap.put(DEBUG_MODE, Boolean.FALSE);
+        configMap.put(NODE_ANAKLISE_INTERVAL, new Integer(10000));
     }
 
     public Boolean isDebugMode() {
@@ -33,4 +35,5 @@ public class Configs {
     public Map<String, Object> getConfigMap() {
         return configMap;
     }
+
 }

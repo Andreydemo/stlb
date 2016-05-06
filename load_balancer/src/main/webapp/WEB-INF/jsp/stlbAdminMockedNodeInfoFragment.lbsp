@@ -1,0 +1,47 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"    pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<!DOCTYPE html>
+<html>
+<head>
+</head>
+<body>
+
+        <table class="ui striped right aligned table">
+            <thead>
+            <th class="left aligned">Name</th>
+            <th class="left aligned">Value</th>
+            </thead>
+            <tbody>
+            <tr>
+                <td class="left aligned">Use mock </td>
+                <td class="left aligned">
+                    <form action="/stlb/switchNodeMockStatus-${node.nodeId}" method="post" class="content">
+                        <c:choose>
+                            <c:when test="${node.mockUsed}">
+                                <button type="submit" class="positive ui button" name="set">
+                                    enabled
+                                </button>
+                            </c:when>
+                            <c:otherwise>
+                                <button type="submit" class="negative ui button" name="set">
+                                    disabled
+                                </button>
+                            </c:otherwise>
+                        </c:choose>
+                    </form>
+                </td>
+            </tr>
+            <tr>
+                <td class="left aligned">Activity point per session</td>
+                <td class="left aligned">
+                    <form action="/stlb/setActivityPointsPerSession-${node.nodeId}" method="post">
+                        <input id="critical-level" name="activityPointsPerSession" value="${node.mockedNode.activityPointsPerSession}" type="number"/>
+                        <button class="teal ui button">Set</button>
+                    </form>
+            </td>
+            </tr>
+            </tbody>
+        </table>
+
+</body>
+</html>

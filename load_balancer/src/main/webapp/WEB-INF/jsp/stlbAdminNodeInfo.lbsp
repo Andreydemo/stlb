@@ -43,6 +43,7 @@
             <a class="item" data-tab="third">CPU monitor</a>
             <a class="item" data-tab="forth">Memory monitor</a>
             <a class="item" data-tab="fifth">Process monitor</a>
+            <a class="item" data-tab="sixth">Mock</a>
         </div>
         <div class="ui bottom attached tab segment active" data-tab="first" id="first-tab">
 
@@ -116,6 +117,48 @@
 
                 </td>
             </tr>
+            <tr>
+                <td class="left aligned">Activity point </td>
+                <td class="left aligned">
+                  ${node.nodeActivityPoints} / 150
+                </td>
+            </tr>
+            <tr>
+                <td class="left aligned">Critical level </td>
+                <td class="left aligned">
+                    <div class="ui small action input">
+                        <form action="/stlb/setCriticalLevel-${node.nodeId}" method="post">
+                            <input id="critical-level" name="criticalLevel" value="${node.criticalLevel}" type="number"/>
+                            <button class="teal ui button">Set</button>
+                        </form>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td class="left aligned">Is in critical state </td>
+                <td class="left aligned">
+                    ${node.inCriticalState}
+                </td>
+            </tr>
+            <tr>
+                <td class="left aligned">Use mock </td>
+                <td class="left aligned">
+                    <form action="/stlb/switchNodeMockStatus-${node.nodeId}" method="post" class="content">
+                        <c:choose>
+                            <c:when test="${node.mockUsed}">
+                                <button type="submit" class="positive ui button" name="set">
+                                    enabled
+                                </button>
+                            </c:when>
+                            <c:otherwise>
+                                <button type="submit" class="negative ui button" name="set">
+                                    disabled
+                                </button>
+                            </c:otherwise>
+                        </c:choose>
+                    </form>
+                </td>
+            </tr>
             </tbody>
         </table>
         <c:if test="${node.connectionsCount > 0}">
@@ -134,6 +177,8 @@
                         <p class="transition hidden">expired - ${connection.expired}</p>
 
                         <p class="transition hidden">lastActivity - ${connection.lastActivity}</p>
+
+                        <p class="transition hidden">activity points - ${connection.activity} / 10 000</p>
                     </div>
                 </c:forEach>
             </div>
@@ -149,6 +194,9 @@
 
         </div>
         <div class="ui bottom attached tab segment" data-tab="forth" id="forth-tab">
+
+        </div>
+        <div class="ui bottom attached tab segment" data-tab="sixth" id="sixth-tab">
 
         </div>
     </section>

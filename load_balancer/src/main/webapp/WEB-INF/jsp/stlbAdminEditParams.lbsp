@@ -54,6 +54,19 @@
                                 <input type="hidden" name="name" value="${configName}">
                             </div>
                         </c:when>
+                        <c:when test="${configType eq 'java.lang.Integer'}">
+
+                            <div class="grouped fields">
+                                <label>${configName} : ${configValue}</label>
+                                <div class="field">
+                                    <div class="ui radio checkbox">
+                                        <input type="number" name="value" value="${configValue}">
+                                    </div>
+                                </div>
+                                <input type="hidden" name="type" value="${configType}">
+                                <input type="hidden" name="name" value="${configName}">
+                            </div>
+                        </c:when>
                     </c:choose>
 
                     <input type="submit" value="Change"  class="teal ui button">

@@ -73,7 +73,7 @@ public class SessionBean {
             }
         }
         loadLevel /= nodeStatisticTask.getSessionLoadLevelCalculationInterval();
-        return loadLevel;
+        return loadLevel * 100 * 100;
     }
 
     /**

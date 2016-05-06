@@ -67,6 +67,14 @@
                                 }
                             });
                         },
+                        sixth: function() {
+                            $.ajax({
+                                url: '/stlb/mockNode-' + $("#nodeId").val(),
+                                success: function(data) {
+                                    $('#sixth-tab').html(data);
+                                }
+                            });
+                        },
                         forth: function() {
                             $.ajax({
                                 url: '/stlb/memoryGraph-' + $("#nodeId").val(),

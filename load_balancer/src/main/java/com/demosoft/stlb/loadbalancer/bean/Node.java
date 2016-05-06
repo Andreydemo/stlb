@@ -24,10 +24,12 @@ public class Node {
     private List<SystemReport> systemReports = new ArrayList<>();
     private int maxCountSavedSystemReports = 20;
     private int infoPort;
+    private Double criticalLevel = -1.0;
+    private boolean mockUsed = false;
+    private MockedNode mockedNode = new MockedNode(this);
 
 
     private List<WeakReference<SessionConnection>> connections = new ArrayList<WeakReference<SessionConnection>>();
-    private Map<String, WeakReference<SessionConnection>> connectionsByNodeSessionId = new HashMap<String,WeakReference<SessionConnection>>();
 
     public Node() {
         name = "Node";
@@ -119,11 +121,6 @@ public class Node {
             }
         }
         connections.removeAll(removingList);
-        for (Map.Entry<String , WeakReference<SessionConnection>> ref : connectionsByNodeSessionId.entrySet()) {
-            if (ref.getValue().get() == null || ref.getValue().get().getExpired()) {
-                connectionsByNodeSessionId.remove(ref.getValue());
-            }
-        }
         connectionsCount = connections.size();
     }
 
@@ -220,12 +217,34 @@ public class Node {
     }
 
     public boolean addSystemReport(SystemReport systemReport) {
-        if(systemReports.size() == maxCountSavedSystemReports){
-            systemReports.remove(maxCountSavedSystemReports -1 );
+        synchronized (this) {
+            if (systemReports.size() == maxCountSavedSystemReports) {
+                systemReports.remove(maxCountSavedSystemReports - 1);
+            }
+            boolean result = systemReports.add(systemReport);
+            Collections.sort(systemReports, SystemReport.defaultComporator);
+
+            return result;
         }
-        boolean result = systemReports.add(systemReport);
-        Collections.sort(systemReports, SystemReport.defaultComporator);
-        return result;
+    }
+
+    public Double getNodeActivityPoints(){
+        synchronized (this){
+            if(mockUsed){
+                return  mockedNode.getMockedActivityPoints();
+            }
+            Double cpuLoad = 0.0;
+            Double memoryLoad = 0.0;
+            for(SystemReport systemReport: systemReports){
+                cpuLoad += systemReport.getSystemCpuLoad();
+                memoryLoad += (systemReport.getTotalPhysicalMemorySize() - systemReport.getFreePhysicalMemorySize())
+                        / systemReport.getTotalPhysicalMemorySize();
+            }
+            cpuLoad/=systemReports.size();
+            memoryLoad/=systemReports.size();
+
+            return cpuLoad + memoryLoad / 1.5;
+        }
     }
 
     public int getMaxCountSavedSystemReports() {
@@ -242,5 +261,54 @@ public class Node {
 
     public void setInfoPort(int infoPort) {
         this.infoPort = infoPort;
+    }
+
+    public Double getCriticalLevel() {
+        return criticalLevel;
+    }
+
+    public void setCriticalLevel(Double criticalLevel) {
+        this.criticalLevel = criticalLevel;
+    }
+
+    public boolean isMockUsed() {
+        return mockUsed;
+    }
+
+    public void setMockUsed(boolean mockUsed) {
+        this.mockUsed = mockUsed;
+    }
+
+    public MockedNode getMockedNode() {
+        return mockedNode;
+    }
+
+    public void setMockedNode(MockedNode mockedNode) {
+        this.mockedNode = mockedNode;
+    }
+
+    public void swithcMockStatus(){
+        mockUsed = !mockUsed;
+    }
+
+    public boolean removeSessionConnection(SessionConnection  sessionConnection){
+        boolean result = false;
+        result = connections.remove(sessionConnection);
+        return result;
+    }
+
+    public boolean isInCriticalState (){
+        if(criticalLevel.equals(-1.0)){
+            return false;
+        }
+        return getNodeActivityPoints() >= criticalLevel;
+    }
+
+    public class CriticalComporator implements Comparator<Node>{
+
+        @Override
+        public int compare(Node o1, Node o2) {
+            return o1.getNodeActivityPoints() < o2.getNodeActivityPoints() ? 1 : 0;
+        }
     }
 }

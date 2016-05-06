@@ -97,6 +97,13 @@ public class AdminController {
         return "stlbAdminNodeCpuProcessGraph";
     }
 
+    @RequestMapping(value = "/mockNode-{nodeId}", method = RequestMethod.GET)
+    private String mockNode(@PathVariable("nodeId") String nodeId, Model m) {
+        Node node = nodeConfigsConteiner.getNodeById(nodeId);
+        m.addAttribute("node", node);
+        return "stlbAdminMockedNodeInfoFragment";
+    }
+
     @RequestMapping(value = "/memoryGraph-{nodeId}", method = RequestMethod.GET)
     private String nodeMemoryGraph(@PathVariable("nodeId") String nodeId, Model m) {
         Node node = nodeConfigsConteiner.getNodeById(nodeId);
@@ -112,6 +119,33 @@ public class AdminController {
         m.addAttribute("node", node);
         return "redirect:nodeInfo-"+node.getNodeId();
     }
+
+    @RequestMapping(value = "/setActivityPointsPerSession-{nodeId}", method = RequestMethod.POST)
+    private String setActivityPointsPerSession(@PathVariable("nodeId") String nodeId, Model m, @RequestParam("activityPointsPerSession") String activityPointsPerSession) {
+        Node node = nodeConfigsConteiner.getNodeById(nodeId);
+        Double activityPointsPerSessionn = Double.valueOf(activityPointsPerSession);
+        node.getMockedNode().setActivityPointsPerSession(activityPointsPerSessionn);
+        m.addAttribute("node", node);
+        return "redirect:nodeInfo-"+node.getNodeId();
+    }
+
+    @RequestMapping(value = "/setCriticalLevel-{nodeId}", method = RequestMethod.POST)
+    private String setCriticalLevele(@PathVariable("nodeId") String nodeId, Model m, @RequestParam("criticalLevel") String criticalLevel) {
+        Node node = nodeConfigsConteiner.getNodeById(nodeId);
+        Double criticalLevell = Double.valueOf(criticalLevel);
+        node.setCriticalLevel(criticalLevell);
+        m.addAttribute("node", node);
+        return "redirect:nodeInfo-"+node.getNodeId();
+    }
+
+    @RequestMapping(value = "/switchNodeMockStatus-{nodeId}", method = RequestMethod.POST)
+    private String switchNodeMockStatus(@PathVariable("nodeId") String nodeId, Model m) {
+        Node node = nodeConfigsConteiner.getNodeById(nodeId);
+        node.swithcMockStatus();
+        m.addAttribute("node", node);
+        return "redirect:nodeInfo-"+node.getNodeId();
+    }
+
 
     @RequestMapping(value = "/config", method = RequestMethod.GET)
     private String configPage(Model m) {
@@ -145,6 +179,14 @@ public class AdminController {
     private Object parseValue(ConfigChangingBean changingBean) {
         if (changingBean.getType().equalsIgnoreCase("java.lang.Boolean")) {
             return Boolean.valueOf((String) changingBean.getValue());
+        }
+        if (changingBean.getType().equalsIgnoreCase("java.lang.Double")) {
+            return Double.valueOf((String) changingBean.getValue());
+        }
+        if (changingBean.getType().equalsIgnoreCase("java.lang.String")) {
+            return String.valueOf((String) changingBean.getValue());
+        }if (changingBean.getType().equalsIgnoreCase("java.lang.Integer")) {
+            return Integer.valueOf((String) changingBean.getValue());
         }
         return null;
     }

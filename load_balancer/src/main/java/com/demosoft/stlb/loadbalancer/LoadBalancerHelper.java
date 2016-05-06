@@ -18,6 +18,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static org.springframework.http.HttpHeaders.LOCATION;
 
@@ -162,6 +163,13 @@ public class LoadBalancerHelper {
         return nodes.get(0);
     }
 
+    public List<Node> getNodesInCriticalState(){
+        return nodeConfigsConteiner.getAvailbleNodes().stream().filter(node -> node.isInCriticalState()).collect(Collectors.toList());
+    }
+    public List<Node> getNodeInNormalState(){
+        return nodeConfigsConteiner.getAvailbleNodes().stream().filter(node -> !node.isInCriticalState()).collect(Collectors.toList());
+    }
+
     public void compileHttpPostHeader(HttpServletRequest request, HttpServletResponse httpServletResponse, HttpHeaders httpHeaders) {
         for (Map.Entry<String, List<String>> entry : httpHeaders.entrySet()) {
 
@@ -206,5 +214,25 @@ public class LoadBalancerHelper {
         return "";
     }
 
+    public void reassignSessionForNode(SessionConnection sessionConnection, Node node){
+        if(node == null) {
+            return;
+        }
+        Node oldNode = sessionConnection.getNode();
+        sessionConnection.setNode(node);
+        oldNode.removeSessionConnection(sessionConnection);
+        node.addConnection(sessionConnection);
+        getNewSessionConnectionForNode(sessionConnection,node);
+
+    }
+
+    public void getNewSessionConnectionForNode(SessionConnection sessionConnection,Node node){
+        HttpHeaders headers = new HttpHeaders();
+        headers.setAccept(Arrays.asList(MediaType.TEXT_HTML));
+        headers.setContentType(MediaType.TEXT_HTML);
+        HttpEntity<String> entity = new HttpEntity<String>("parameters", headers);
+        ResponseEntity<String> response = restTemplate.exchange(node.getUrl() , HttpMethod.GET, entity, String.class);
+        processJSessionIdAfterRequest(response, sessionConnection);
+    }
 
 }
