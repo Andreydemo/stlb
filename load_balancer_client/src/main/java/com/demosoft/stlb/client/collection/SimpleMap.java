@@ -52,7 +52,7 @@ public class SimpleMap<K, V> implements Map<K, V>, Serializable {
 
     @Override
     public V put(K key, V value) {
-        if (size >= vals.length) {
+        if (size + 1 >= vals.length) {
             defineMemory();
         }
         if (!isEmpty()) {

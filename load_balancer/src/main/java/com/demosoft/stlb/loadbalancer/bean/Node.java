@@ -80,8 +80,20 @@ public class Node {
 
     public void addConnection(SessionConnection connection) {
         filterConncections();
+        if(containsConnection(connection)){
+            return;
+        }
         WeakReference<SessionConnection> reference = new WeakReference<SessionConnection>(connection);
         connections.add(reference);
+    }
+
+    public boolean containsConnection(SessionConnection connection){
+        for(WeakReference<SessionConnection> weakReference : connections){
+            if(weakReference.get() != null && weakReference.get().getNodeJSessionId().equalsIgnoreCase(connection.getNodeJSessionId())){
+                return true;
+            }
+        }
+        return false;
     }
 
     public int getConnectionCount() {

@@ -3,6 +3,8 @@ package com.demosoft.stlb.client.controller;
 import com.demosoft.stlb.client.annotation.PerformanceMonitor;
 import com.demosoft.stlb.client.bean.SessionBean;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.ImportResource;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -13,16 +15,22 @@ import java.net.InetAddress;
 import java.net.UnknownHostException;
 
 @Controller
+@ImportResource({"appConfigs.xml"})
 public class HelloController {
 
 
     @Autowired
     SessionBean sessionBean;
 
+    @Value("${siteName}")
+    private String siteName;
+
+
     @PerformanceMonitor
     @RequestMapping("/")
     public String index(HttpSession session, Model model) {
         model.addAttribute("sessionId", session.getId());
+        model.addAttribute("siteName",siteName);
         String hostname, serverAddress;
         hostname = "error";
         serverAddress = "error";

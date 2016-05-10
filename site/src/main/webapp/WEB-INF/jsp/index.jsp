@@ -6,7 +6,8 @@
 
 </head>
 <body>
-Hello World your session id is : ${sessionId}<br>
+<h1>Site name: ${siteName}</h1>
+Hello  your session id is : ${sessionId}<br>
 host - ${host}
 <ul>
     <li><a href="/page1">page1</a></li>
