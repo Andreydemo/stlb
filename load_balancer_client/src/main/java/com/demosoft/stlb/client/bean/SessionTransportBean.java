@@ -24,10 +24,6 @@ public class SessionTransportBean <T> implements Serializable {
         return (T) object;
     }
 
-    public Class getSessionClass(){
-        return clazz;
-    }
-
     public void setObject(T object) {
         this.object = object;
     }
