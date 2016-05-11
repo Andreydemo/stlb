@@ -6,5 +6,5 @@ echo "application.properties"
 cat node0_app.xml > site/src/main/resources/config/application.properties
 
 osascript -e 'tell app "Terminal"
-    do script "sh development/projects/stlb/runNode0_maven.sh"
-end tell'
+    do script "sh development/projects/stlb/runNode0_maven.sh ; exit;"
+end tell' 
