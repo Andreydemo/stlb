@@ -1,4 +1,4 @@
-package com.demosoft.stlb.loadbalancer;
+package com.demosoft.stlb.loadbalancer.util;
 
 import com.demosoft.stlb.client.bean.STLBRequest;
 import com.demosoft.stlb.loadbalancer.bean.Node;
@@ -21,16 +21,12 @@ public class SessionUtils {
 
 
     public void registerActivity(Node node, STLBRequest request) {
-        System.out.println("---start session statistic registration");
         Map<String, Double> sessionsLoadings = request.getSessionsLoadings();
-        System.out.println("------session loaddings" + sessionsLoadings);
         if (sessionsLoadings != null) {
             for(Map.Entry<String,Double> load : sessionsLoadings.entrySet()){
-        System.out.println("------session loaddings: id: " + load.getKey() + " load: " + load.getValue());
                 SessionConnection sessionConnection =  node.getConnectionByNodeSeesionId(load.getKey());
                 if(sessionConnection != null){
                     sessionConnection.setActivity(load.getValue());
-                    System.out.println("registered statistic: " + load.getKey() + " : " + load.getValue());
                 }
             }
         }

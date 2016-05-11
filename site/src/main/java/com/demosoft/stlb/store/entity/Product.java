@@ -1,12 +1,13 @@
 package com.demosoft.stlb.store.entity;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.List;
 
 /**
  * Created by andrii_korkoshko on 10.05.16.
  */
-public class Product {
+public class Product implements Serializable{
 
     private String id;
     private String name;
@@ -89,5 +90,10 @@ public class Product {
         result = 31 * result + (description != null ? description.hashCode() : 0);
         result = 31 * result + (images != null ? images.hashCode() : 0);
         return result;
+    }
+
+    @Override
+    public String toString() {
+        return id;
     }
 }

@@ -76,6 +76,7 @@ public class SimpleMap<K, V> implements Map<K, V>, Serializable {
         Object[][] newVals = new Object[(int) (size * 1.5)][];
         System.arraycopy(vals, 0, newVals, 0,
                 size);
+        vals = newVals;
     }
 
     @Override

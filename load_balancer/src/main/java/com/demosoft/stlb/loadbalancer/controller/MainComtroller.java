@@ -22,7 +22,7 @@ import javax.servlet.http.HttpSession;
  * Created by Andrii_Korkoshko on 17.09.2015.
  */
 @Controller
-@Scope("request")
+@Scope("session")
 public class MainComtroller {
 
     @Autowired
@@ -38,10 +38,13 @@ public class MainComtroller {
 
     @RequestMapping( method = RequestMethod.GET)
     @ResponseBody
-    private String processGetRequest(HttpSession session, HttpServletRequest request) throws ResourceAccessException {
+    private String processGetRequest(HttpSession session, HttpServletRequest request) throws ResourceAccessException, InterruptedException {
         checkSessionConection(session);
         request.getServletContext().getServletRegistrations();
         log.debug("GET call for {} node for path {}",sessionConnection.getNode().getUrl(), request.getRequestURI());
+        while (sessionConnection.isLocked()){
+            Thread.sleep(100);
+        }
         String response = loadBalancerHelper.get(request, sessionConnection).getBody();
         sessionConnection.updateActivity();
         return generateResponseHtml(request, response);
@@ -49,8 +52,11 @@ public class MainComtroller {
 
     @RequestMapping(value = "/**", method = RequestMethod.POST)
     @ResponseBody
-    private String processPostRequest(HttpSession session, HttpServletRequest request, HttpServletResponse httpServletResponse) throws ResourceAccessException {
+    private String processPostRequest(HttpSession session, HttpServletRequest request, HttpServletResponse httpServletResponse) throws ResourceAccessException, InterruptedException {
         checkSessionConection(session);
+        while (sessionConnection.isLocked()){
+            Thread.sleep(100);
+        }
         ResponseEntity<String> responseEntity = loadBalancerHelper.post(request, sessionConnection);
         String response = responseEntity.getBody();
         loadBalancerHelper. compileHttpPostHeader(request,httpServletResponse, responseEntity.getHeaders());

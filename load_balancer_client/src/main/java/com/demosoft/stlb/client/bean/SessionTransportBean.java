@@ -1,15 +1,21 @@
 package com.demosoft.stlb.client.bean;
 
+import java.io.IOException;
+import java.io.Serializable;
+
 /**
  * Created by andrii_korkoshko on 03.05.16.
  */
-public class SessionTransportBean <T> {
+public class SessionTransportBean <T> implements Serializable {
 
-    private Object object;
+    private T object;
 
     private Class clazz;
 
-    public SessionTransportBean(Object object) {
+    public SessionTransportBean() {
+    }
+
+    public SessionTransportBean(T object) {
         this.object = object;
         clazz = object.getClass();
     }
@@ -20,5 +26,24 @@ public class SessionTransportBean <T> {
 
     public Class getSessionClass(){
         return clazz;
+    }
+
+    public void setObject(T object) {
+        this.object = object;
+    }
+
+    public Class getClazz() {
+        return clazz;
+    }
+
+    public void setClazz(Class clazz) {
+        this.clazz = clazz;
+    }
+
+    public interface SessionTransportBeanFactory<T>{
+
+        SessionTransportBean get(String body) throws IOException;
+
+
     }
 }

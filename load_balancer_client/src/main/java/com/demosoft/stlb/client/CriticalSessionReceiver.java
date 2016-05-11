@@ -5,7 +5,7 @@ import com.demosoft.stlb.client.bean.SessionTransportBean;
 /**
  * Created by andrii_korkoshko on 03.05.16.
  */
-public interface ReceiveCriticalSession <T> {
+public interface CriticalSessionReceiver<T> {
 
-    SessionTransportBean<T> receive();
+    boolean receive(SessionTransportBean<T> sessionTransportBean);
 }

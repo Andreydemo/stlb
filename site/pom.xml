@@ -55,7 +55,7 @@
                 <version>1.2.5.RELEASE</version>
                 <configuration>
                     <jvmArguments>
-                      <!--  -Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=5006-->
+                        <!-- -Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=5006-->
                     </jvmArguments>
                 </configuration>
             </plugin>

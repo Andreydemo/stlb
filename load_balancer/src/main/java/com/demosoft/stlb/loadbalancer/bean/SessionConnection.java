@@ -23,6 +23,9 @@ public class SessionConnection {
     private Boolean expired = false;
     private Date lastActivity;
     private Double activity = -1.0;
+    private boolean dataBroked;
+
+    private boolean locked;
 
     public Node getNode() {
         return node;
@@ -76,5 +79,21 @@ public class SessionConnection {
 
     public void setActivity(Double activity) {
         this.activity = activity;
+    }
+
+    public boolean isLocked() {
+        return locked;
+    }
+
+    public void setLocked(boolean locked) {
+        this.locked = locked;
+    }
+
+    public boolean isDataBroked() {
+        return dataBroked;
+    }
+
+    public void setDataBroked(boolean dataBroked) {
+        this.dataBroked = dataBroked;
     }
 }

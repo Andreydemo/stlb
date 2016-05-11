@@ -18,4 +18,45 @@
         </property>
     </bean>
 
+
+    <!-- Configure bean to convert JSON to POJO and vice versa -->
+    <bean id="jsonHttpMessageConverter" class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter">
+        <property name="objectMapper" ref="jacksonObjectMapper" />
+    </bean>
+    <bean id="jacksonObjectMapper" class="com.demosoft.stlb.client.bean.MyJsonMapper" />
+    <bean class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter">
+        <property name="messageConverters">
+            <list>
+                <ref bean="jsonHttpMessageConverter" />
+            </list>
+        </property>
+    </bean>
+    <bean class="org.springframework.web.servlet.view.ContentNegotiatingViewResolver">
+        <property name="mediaTypes">
+            <map>
+                <entry key="json" value="application/json" />
+                <entry key="htm" value="text/html" />
+            </map>
+        </property>
+        <property name="viewResolvers">
+            <list>
+                <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+                    <property name="prefix">
+                        <value>/WEB-INF/jsp/</value>
+                    </property>
+                    <property name="suffix">
+                        <value>.jsp</value>
+                    </property>
+                </bean>
+            </list>
+        </property>
+        <property name="defaultViews">
+            <list>
+                <bean class="org.springframework.web.servlet.view.json.MappingJackson2JsonView">
+                    <property name="prefixJson" value="false" />
+                </bean>
+            </list>
+        </property>
+    </bean>
+
 </beans>

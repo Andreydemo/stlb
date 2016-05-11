@@ -218,12 +218,20 @@ public class LoadBalancerHelper {
         if(node == null) {
             return;
         }
-        Node oldNode = sessionConnection.getNode();
-        oldNode.removeSessionConnection(sessionConnection);
-        sessionConnection.setNode(node);
-        node.addConnection(sessionConnection);
-        getNewSessionConnectionForNode(sessionConnection,node);
-
+        sessionConnection.setLocked(true);
+        try {
+            String sessionDataBody = getSessionData(sessionConnection);
+            Node oldNode = sessionConnection.getNode();
+            oldNode.removeSessionConnection(sessionConnection);
+            sessionConnection.setNode(node);
+            node.addConnection(sessionConnection);
+            getNewSessionConnectionForNode(sessionConnection, node);
+            setSessionData(sessionConnection, sessionDataBody);
+        } catch (Exception e){
+            e.printStackTrace();
+        } finally {
+            sessionConnection.setLocked(false);
+        }
     }
 
     public void getNewSessionConnectionForNode(SessionConnection sessionConnection,Node node){
@@ -234,5 +242,28 @@ public class LoadBalancerHelper {
         ResponseEntity<String> response = restTemplate.exchange(node.getUrl() , HttpMethod.GET, entity, String.class);
         processJSessionIdAfterRequest(response, sessionConnection);
     }
+
+    public String getSessionData(SessionConnection sessionConnection){
+        HttpHeaders headers = new HttpHeaders();
+        headers.setAccept(Arrays.asList(MediaType.TEXT_HTML,MediaType.APPLICATION_JSON));
+        headers.setContentType(MediaType.TEXT_HTML);
+        putCorrectSessionIdToHeadrs(headers,sessionConnection);
+        HttpEntity<String> entity = new HttpEntity<String>("parameters", headers);
+        ResponseEntity<String> response = restTemplate.exchange(sessionConnection.getNode().getUrl()+"/admin/stlb/getSessionBean" , HttpMethod.GET, entity, String.class);
+        return  response.getBody();
+    }
+
+    public void setSessionData(SessionConnection sessionConnection,String body){
+        HttpHeaders headers = new HttpHeaders();
+        headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        putCorrectSessionIdToHeadrs(headers,sessionConnection);
+        HttpEntity<String> entity = new HttpEntity<String>(body, headers);
+        ResponseEntity<String> response = restTemplate.exchange(sessionConnection.getNode().getUrl()+"/admin/stlb/setSessionBean" , HttpMethod.POST, entity, String.class);
+        sessionConnection.setDataBroked(Boolean.parseBoolean(response.getBody()));
+    }
+
+
+
 
 }

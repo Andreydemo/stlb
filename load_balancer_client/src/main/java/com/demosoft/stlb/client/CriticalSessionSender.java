@@ -5,7 +5,7 @@ import com.demosoft.stlb.client.bean.SessionTransportBean;
 /**
  * Created by andrii_korkoshko on 03.05.16.
  */
-public interface SendCriticalSession <T> {
+public interface CriticalSessionSender<T> {
 
-    boolean send(SessionTransportBean<T> sessionTransportBean);
+    SessionTransportBean<T> send();
 }
