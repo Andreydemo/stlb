@@ -3,6 +3,7 @@ package com.demosoft.stlb.loadbalancer;
 import com.demosoft.stlb.loadbalancer.bean.Node;
 import com.demosoft.stlb.loadbalancer.bean.NodeConfigsConteiner;
 import com.demosoft.stlb.loadbalancer.bean.SessionConnection;
+import org.apache.commons.lang3.ArrayUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,6 +56,17 @@ public class LoadBalancerHelper {
         HttpEntity<String> entity = new HttpEntity<String>("parameters", headers);
         ResponseEntity<String> response = restTemplate.exchange(connection.getNode().getUrl() + httpRequest.getRequestURI(), HttpMethod.GET, entity, String.class);
         processJSessionIdAfterRequest(response, connection);
+        return response;
+    }
+
+    public ResponseEntity<byte[]> getBytes(HttpServletRequest httpRequest, SessionConnection connection) throws ResourceAccessException {
+        HttpHeaders headers = new HttpHeaders();
+        headers.setAccept(Arrays.asList(MediaType.TEXT_HTML));
+        headers.setContentType(MediaType.TEXT_HTML);
+        putCorrectSessionIdToHeadrs(headers, connection);
+        HttpEntity<byte[]> entity = new HttpEntity<>("parameters".getBytes(), headers);
+        ResponseEntity<byte[]> response = restTemplate.exchange(connection.getNode().getUrl() + httpRequest.getRequestURI(), HttpMethod.GET, entity, byte[].class);
+        //processJSessionIdAfterRequest(response, connection);
         return response;
     }
 

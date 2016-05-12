@@ -17,6 +17,7 @@ import org.springframework.web.client.ResourceAccessException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import java.nio.charset.StandardCharsets;
 
 /**
  * Created by Andrii_Korkoshko on 17.09.2015.
@@ -38,16 +39,23 @@ public class MainComtroller {
 
     @RequestMapping( method = RequestMethod.GET)
     @ResponseBody
-    private String processGetRequest(HttpSession session, HttpServletRequest request) throws ResourceAccessException, InterruptedException {
+    private byte[] processGetRequest(HttpSession session, HttpServletRequest request) throws ResourceAccessException, InterruptedException {
         checkSessionConection(session);
         request.getServletContext().getServletRegistrations();
         log.debug("GET call for {} node for path {}",sessionConnection.getNode().getUrl(), request.getRequestURI());
         while (sessionConnection.isLocked()){
             Thread.sleep(100);
         }
-        String response = loadBalancerHelper.get(request, sessionConnection).getBody();
+        /*String response = loadBalancerHelper.get(request, sessionConnection).getBody();
         sessionConnection.updateActivity();
-        return generateResponseHtml(request, response);
+        return generateResponseHtml(request, response).getBytes(StandardCharsets.UTF_8);*/
+        return  loadBalancerHelper.getBytes(request, sessionConnection).getBody();
+    }
+
+    @RequestMapping(value = "*.jpg", method = RequestMethod.GET)
+    public @ResponseBody byte[] getImage(){
+        System.out.println("JPGGGGGGGG");
+        return new byte[255];
     }
 
     @RequestMapping(value = "/**", method = RequestMethod.POST)
