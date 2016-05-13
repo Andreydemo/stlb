@@ -1,3 +1,4 @@
+
 <%@ page language="java" contentType="text/html; charset=UTF-8"    pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <!--A Design by W3layouts
@@ -274,10 +275,10 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
                     <div class="close1"> </div>
                     <div class="cart-sec simpleCart_shelfItem">
                         <div class="cart-item cyc">
-                            <img src="images/${entity.key.images[0]}" class="img-responsive" alt=""/>
+                            <img src="images/${cart.order.productMap[entity.key].images[0]}" class="img-responsive" alt=""/>
                         </div>
                         <div class="cart-item-info">
-                            <h3><a href="#">${entity.key.name}</a><span>Model No: 3578</span></h3>
+                            <h3><a href="#">${cart.order.productMap[entity.key].name}</a><span>Model No: 3578</span></h3>
                             <ul class="qty">
                                 <li><p>Size : 5</p></li>
                                 <li><p>Qty : ${entity.value}</p></li>
