@@ -37,7 +37,7 @@
                 }
             },
             title: {
-                text: 'Cpu loading'
+                text: 'CPU loading'
             },
             xAxis: {
                 type: 'datetime',
