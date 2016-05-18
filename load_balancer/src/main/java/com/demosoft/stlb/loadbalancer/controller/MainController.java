@@ -24,7 +24,7 @@ import java.nio.charset.StandardCharsets;
  */
 @Controller
 @Scope("session")
-public class MainComtroller {
+public class MainController {
 
     @Autowired
     private LoadBalancerHelper loadBalancerHelper;
@@ -49,13 +49,7 @@ public class MainComtroller {
         /*String response = loadBalancerHelper.get(request, sessionConnection).getBody();
         sessionConnection.updateActivity();
         return generateResponseHtml(request, response).getBytes(StandardCharsets.UTF_8);*/
-        return  loadBalancerHelper.getBytes(request, sessionConnection).getBody();
-    }
-
-    @RequestMapping(value = "*.jpg", method = RequestMethod.GET)
-    public @ResponseBody byte[] getImage(){
-        System.out.println("JPGGGGGGGG");
-        return new byte[255];
+        return  generateResponseHtml(request, loadBalancerHelper.getBytes(request, sessionConnection).getBody());
     }
 
     @RequestMapping(value = "/**", method = RequestMethod.POST)
@@ -70,7 +64,7 @@ public class MainComtroller {
         loadBalancerHelper. compileHttpPostHeader(request,httpServletResponse, responseEntity.getHeaders());
         httpServletResponse.setStatus(responseEntity.getStatusCode().value());
         sessionConnection.updateActivity();
-        return generateResponseHtml(request, response);
+        return response;
     }
 
 
@@ -84,9 +78,10 @@ public class MainComtroller {
         }
     }
 
-    private String generateResponseHtml(HttpServletRequest request, String response) {
+    private byte[] generateResponseHtml(HttpServletRequest request, byte[] response) {
         if (configs.isDebugMode()) {
-            return "<link rel=\"stylesheet\" type=\"text/css\" href=\"/stlb/bower_components/normalize-css/normalize.css\"/>\n" +
+            byte[] debugHeader =
+                    ("<link rel=\"stylesheet\" type=\"text/css\" href=\"/stlb/bower_components/normalize-css/normalize.css\"/>\n" +
                     "        <link rel=\"stylesheet\" type=\"text/css\" href=\"/stlb/bower_components/semantic/dist/semantic.css\"/>" +
                     "<div class=\"ui message\">\n" +
                     "<div class=\"header\">" +
@@ -97,8 +92,14 @@ public class MainComtroller {
                     "<li>Node: " + sessionConnection.getNode().getUrl() + "</li>" +
                     "<li>Full request url" + sessionConnection.getNode().getUrl() + request.getRequestURI() + "</li>" +
                     "</ul>\n" +
-                    "</div>" + response;
+                    "</div>").getBytes();
+
+            byte[] result = new byte[debugHeader.length + response.length];
+            System.arraycopy(debugHeader,0,result,0,debugHeader.length);
+            System.arraycopy(response,0,result,debugHeader.length,response.length);
+            return result;
         }
+
         return response;
     }
 
