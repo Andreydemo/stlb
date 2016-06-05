@@ -89,7 +89,7 @@ public class Node {
 
     public boolean containsConnection(SessionConnection connection){
         for(WeakReference<SessionConnection> weakReference : connections){
-            if(weakReference.get() != null && weakReference.get().getNodeJSessionId().equalsIgnoreCase(connection.getNodeJSessionId())){
+            if(weakReference.get() != null && weakReference.get().getNodeJSessionId() != null &&weakReference.get().getNodeJSessionId().equalsIgnoreCase(connection.getNodeJSessionId())){
                 return true;
             }
         }
@@ -118,7 +118,7 @@ public class Node {
     public SessionConnection getConnectionByNodeSeesionId(String sessionId){
         filterConncections();
         for(WeakReference<SessionConnection> connection : connections){
-            if(connection.get().getNodeJSessionId().equalsIgnoreCase(sessionId)){
+            if(sessionId.equalsIgnoreCase(connection.get().getNodeJSessionId())){
                 return connection.get();
             }
         }

@@ -37,7 +37,7 @@
                 }
             },
             title: {
-                text: 'Cpu loading'
+                text: 'Process CPU loading'
             },
             xAxis: {
                 type: 'datetime',
@@ -68,7 +68,7 @@
                 enabled: false
             },
             series: [{
-                name: 'Cpu loading rate',
+                name: 'Process Cpu loading rate',
                 data: (function() {
 
                     // generate an array of random data

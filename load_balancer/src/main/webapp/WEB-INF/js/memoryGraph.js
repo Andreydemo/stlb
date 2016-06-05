@@ -32,8 +32,9 @@
                                 async: false,
                                 success: function(data) {
                                     $(data).find('#first-report').each(function(index, el) {
-                                        var date = new Date($(el).find('.date').data('time')),
-                                            cpu = (parseFloat($(el).find('.freemem').text()) / parseFloat($(el).find('.totalmem').text())) * 100;
+                                        var date = new Date($(el).find('.date').data('time'));
+                                        var totalMem = parseFloat($(el).find('.totalmem').text());
+                                         var  cpu = ((totalMem - parseFloat($(el).find('.freemem').text()) )/ totalMem) * 100;
                                         if (parseInt(series.processedXData[series.processedXData.length - 1]) !== date.getTime()) {
 
                                             series.addPoint([date.getTime(), cpu], true, true);
@@ -77,7 +78,7 @@
                 enabled: false
             },
             series: [{
-                name: 'Cpu loading rate',
+                name: 'Free memory rate',
                 data: (function() {
 
                     // generate an array of random data
@@ -89,8 +90,9 @@
                         success: function(data) {
                             var count = parseInt($(data).find("#reports-count").val())
                             for (i = count; i > 0; i--) {
-                                var date = $($(data).find(".report-number-" + i)[0]).find('.date').data('time'),
-                                    cpu = (parseFloat($($(data).find(".report-number-" + i)[0]).find('.freemem').text()) / parseFloat($($(data).find(".report-number-" + i)[0]).find('.totalmem').text())) * 100;
+                                var date = $($(data).find(".report-number-" + i)[0]).find('.date').data('time');
+                                var totalMem = parseFloat($($(data).find(".report-number-" + i)[0]).find('.totalmem').text());
+                                 var   cpu = ((totalMem - parseFloat($($(data).find(".report-number-" + i)[0]).find('.freemem').text())) / totalMem) * 100;
                                 dataContainer.push({
                                     x: new Date(date).getTime(),
                                     y: cpu

@@ -49,7 +49,9 @@ public class MainController {
         /*String response = loadBalancerHelper.get(request, sessionConnection).getBody();
         sessionConnection.updateActivity();
         return generateResponseHtml(request, response).getBytes(StandardCharsets.UTF_8);*/
-        return  generateResponseHtml(request, loadBalancerHelper.getBytes(request, sessionConnection).getBody());
+        byte[] responeBody = loadBalancerHelper.getBytes(request, sessionConnection).getBody();
+        sessionConnection.updateActivity();
+        return  generateResponseHtml(request, responeBody);
     }
 
     @RequestMapping(value = "/**", method = RequestMethod.POST)

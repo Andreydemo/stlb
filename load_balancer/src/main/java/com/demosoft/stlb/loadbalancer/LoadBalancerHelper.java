@@ -66,7 +66,7 @@ public class LoadBalancerHelper {
         putCorrectSessionIdToHeadrs(headers, connection);
         HttpEntity<byte[]> entity = new HttpEntity<>("parameters".getBytes(), headers);
         ResponseEntity<byte[]> response = restTemplate.exchange(connection.getNode().getUrl() + httpRequest.getRequestURI(), HttpMethod.GET, entity, byte[].class);
-        //processJSessionIdAfterRequest(response, connection);
+        processJSessionIdAfterRequest(response, connection);
         return response;
     }
 
@@ -128,7 +128,7 @@ public class LoadBalancerHelper {
         return response;
     }
 
-    private void processJSessionIdAfterRequest(ResponseEntity<String> response, SessionConnection connection) {
+    private void processJSessionIdAfterRequest(ResponseEntity response, SessionConnection connection) {
         List<String> newHeaders = response.getHeaders().get(SET_COOKIE);
         boolean isJSessionFound = false;
         String jSessionId = null;

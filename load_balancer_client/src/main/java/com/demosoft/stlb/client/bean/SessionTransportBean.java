@@ -40,6 +40,5 @@ public class SessionTransportBean <T> implements Serializable {
 
         SessionTransportBean get(String body) throws IOException;
 
-
     }
 }

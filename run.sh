@@ -6,7 +6,7 @@ cd ..
 sh runNode0.sh
 sleep 10
 sh runNode1.sh
-sleep 10
+sleep 20
 echo "--------------Balancer----------"
 osascript -e 'tell app "Terminal"
     do script "sh development/projects/stlb/runBalancer_maven.sh ; exit ; "
