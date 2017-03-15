@@ -21,7 +21,7 @@
         </property>
     </bean>
 
-    <mongo:mongo host="localhost" port="27017" id="mongo" />
-    <mongo:db-factory dbname="balancer_db" mongo-ref="mongo" id="mongoDbFactory"  />
+<!--    <mongo:mongo host="localhost" port="27017" id="mongo" />
+    <mongo:db-factory dbname="balancer_db" mongo-ref="mongo" id="mongoDbFactory"  />-->
 
 </beans>

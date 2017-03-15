@@ -29,6 +29,7 @@ public class ContextListener extends ContextLoaderListener implements ServletCon
     @Override
     public void contextInitialized(ServletContextEvent servletContextEvent) {
         chageJaspeMapping();
+        servletContext.getServletRegistrations().get("jsp").addMapping("*.lbsp");
         log.info("Jasper Mapping {}", servletContext.getServletRegistrations().get("jsp").getMappings());
 
     }
@@ -42,6 +43,8 @@ public class ContextListener extends ContextLoaderListener implements ServletCon
             Context context1 = (Context) context.get(servletRegistration);
             ((Wrapper) context1.findChild("jsp")).removeMapping("*.jsp");
             ((Wrapper) context1.findChild("jsp")).removeMapping("*.jspx");
+            context1.removeServletMapping("*.jsp");
+            context1.removeServletMapping("*.jspx");
             ((Wrapper) context1.findChild("jsp")).addMapping("*.lbsp");
             System.out.println("removed");
         } catch (NoSuchFieldException e) {
