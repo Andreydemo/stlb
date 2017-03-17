@@ -1,4 +1,4 @@
-package com.demosoft.stlb.loadbalancer;
+package com.demosoft.stlb;
 
 /**
  * Created by Andrii on 3/17/2017.

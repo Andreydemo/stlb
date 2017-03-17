@@ -1,14 +1,17 @@
 package com.demosoft.stlb;
 
+import org.springframework.context.annotation.Configuration;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.config.annotation.DefaultServletHandlerConfigurer;
+import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
 /**
  * Created by Andrii_Korkoshko on 30.09.2015.
  */
-@Component
+@Configuration
+@EnableWebMvc
 public class ClientWebMvcConfigurerAdapter extends WebMvcConfigurerAdapter {
 
 
