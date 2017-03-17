@@ -36,6 +36,8 @@ public class BalancerApplication extends SpringBootServletInitializer {
         super.onStartup(servletContext);
     }
 
+
+
     public static void main(String[] args) {
         int mb = 1024*1024;
         ApplicationContext ctx = SpringApplication.run(BalancerApplication.class, args);
