@@ -71,6 +71,7 @@ public class AdminController {
         m.addAttribute("node", node);
         return "stlbAdminNodeInfo";
     }
+
     @RequestMapping(value = "/nodeInfoFragment-{nodeId}", method = RequestMethod.GET)
     private String nodeInfoPageFragment(@PathVariable("nodeId") String nodeId, Model m) {
         Node node = nodeConfigsConteiner.getNodeById(nodeId);
@@ -84,12 +85,14 @@ public class AdminController {
         m.addAttribute("node", node);
         return "stlbAdminNodeLoading";
     }
+
     @RequestMapping(value = "/cpuGraph-{nodeId}", method = RequestMethod.GET)
     private String nodeCpuGraph(@PathVariable("nodeId") String nodeId, Model m) {
         Node node = nodeConfigsConteiner.getNodeById(nodeId);
         m.addAttribute("node", node);
         return "stlbAdminNodeCpuGraph";
     }
+
     @RequestMapping(value = "/cpuProcessGraph-{nodeId}", method = RequestMethod.GET)
     private String nodeCpuProcessGraph(@PathVariable("nodeId") String nodeId, Model m) {
         Node node = nodeConfigsConteiner.getNodeById(nodeId);
@@ -117,7 +120,7 @@ public class AdminController {
         Integer intervall = Integer.valueOf(interval);
         adminService.setNodeInterval(node, intervall);
         m.addAttribute("node", node);
-        return "redirect:nodeInfo-"+node.getNodeId();
+        return "redirect:nodeInfo-" + node.getNodeId();
     }
 
     @RequestMapping(value = "/setActivityPointsPerSession-{nodeId}", method = RequestMethod.POST)
@@ -126,7 +129,7 @@ public class AdminController {
         Double activityPointsPerSessionn = Double.valueOf(activityPointsPerSession);
         node.getMockedNode().setActivityPointsPerSession(activityPointsPerSessionn);
         m.addAttribute("node", node);
-        return "redirect:nodeInfo-"+node.getNodeId();
+        return "redirect:nodeInfo-" + node.getNodeId();
     }
 
     @RequestMapping(value = "/setCriticalLevel-{nodeId}", method = RequestMethod.POST)
@@ -135,7 +138,7 @@ public class AdminController {
         Double criticalLevell = Double.valueOf(criticalLevel);
         node.setCriticalLevel(criticalLevell);
         m.addAttribute("node", node);
-        return "redirect:nodeInfo-"+node.getNodeId();
+        return "redirect:nodeInfo-" + node.getNodeId();
     }
 
     @RequestMapping(value = "/switchNodeMockStatus-{nodeId}", method = RequestMethod.POST)
@@ -143,7 +146,7 @@ public class AdminController {
         Node node = nodeConfigsConteiner.getNodeById(nodeId);
         node.swithcMockStatus();
         m.addAttribute("node", node);
-        return "redirect:nodeInfo-"+node.getNodeId();
+        return "redirect:nodeInfo-" + node.getNodeId();
     }
 
 
@@ -177,16 +180,20 @@ public class AdminController {
     }
 
     private Object parseValue(ConfigChangingBean changingBean) {
-        if (changingBean.getType().equalsIgnoreCase("java.lang.Boolean")) {
+        if (changingBean.getType().equalsIgnoreCase(Boolean.class.getTypeName())) {
             return Boolean.valueOf((String) changingBean.getValue());
         }
-        if (changingBean.getType().equalsIgnoreCase("java.lang.Double")) {
+        if (changingBean.getType().equalsIgnoreCase(Double.class.getTypeName())) {
             return Double.valueOf((String) changingBean.getValue());
         }
-        if (changingBean.getType().equalsIgnoreCase("java.lang.String")) {
-            return String.valueOf((String) changingBean.getValue());
-        }if (changingBean.getType().equalsIgnoreCase("java.lang.Integer")) {
+        if (changingBean.getType().equalsIgnoreCase(String.class.getTypeName())) {
+            return String.valueOf(changingBean.getValue());
+        }
+        if (changingBean.getType().equalsIgnoreCase(Integer.class.getTypeName())) {
             return Integer.valueOf((String) changingBean.getValue());
+        }
+        if (changingBean.getType().equalsIgnoreCase(Float.class.getTypeName())) {
+            return Float.valueOf((String) changingBean.getValue());
         }
         return null;
     }

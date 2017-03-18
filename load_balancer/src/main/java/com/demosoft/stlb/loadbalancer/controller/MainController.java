@@ -1,6 +1,7 @@
 package com.demosoft.stlb.loadbalancer.controller;
 
 import com.demosoft.stlb.loadbalancer.bean.Configs;
+import com.demosoft.stlb.loadbalancer.bean.Node;
 import com.demosoft.stlb.loadbalancer.bean.SessionConnection;
 import com.demosoft.stlb.loadbalancer.LoadBalancerHelper;
 import org.slf4j.Logger;
@@ -37,13 +38,16 @@ public class MainController {
 
     private final Logger log = LoggerFactory.getLogger(this.getClass());
 
-    @RequestMapping( method = RequestMethod.GET)
+    @RequestMapping(method = RequestMethod.GET)
     @ResponseBody
     private byte[] processGetRequest(HttpSession session, HttpServletRequest request) throws ResourceAccessException, InterruptedException {
         checkSessionConection(session);
         request.getServletContext().getServletRegistrations();
-        log.debug("GET call for {} node for path {}",sessionConnection.getNode().getUrl(), request.getRequestURI());
-        while (sessionConnection.isLocked()){
+        if (sessionConnection.getNode() == null) {
+            return generateResponseHtml(request, "NODE not found".getBytes());
+        }
+        log.debug("GET call for {} node for path {}", sessionConnection.getNode().getUrl(), request.getRequestURI());
+        while (sessionConnection.isLocked()) {
             Thread.sleep(100);
         }
         /*String response = loadBalancerHelper.get(request, sessionConnection).getBody();
@@ -51,32 +55,34 @@ public class MainController {
         return generateResponseHtml(request, response).getBytes(StandardCharsets.UTF_8);*/
         byte[] responeBody = loadBalancerHelper.getBytes(request, sessionConnection).getBody();
         sessionConnection.updateActivity();
-        return  generateResponseHtml(request, responeBody);
+        return generateResponseHtml(request, responeBody);
     }
 
     @RequestMapping(value = "/**", method = RequestMethod.POST)
     @ResponseBody
     private String processPostRequest(HttpSession session, HttpServletRequest request, HttpServletResponse httpServletResponse) throws ResourceAccessException, InterruptedException {
         checkSessionConection(session);
-        while (sessionConnection.isLocked()){
+        while (sessionConnection.isLocked()) {
             Thread.sleep(100);
         }
         ResponseEntity<String> responseEntity = loadBalancerHelper.post(request, sessionConnection);
         String response = responseEntity.getBody();
-        loadBalancerHelper. compileHttpPostHeader(request,httpServletResponse, responseEntity.getHeaders());
+        loadBalancerHelper.compileHttpPostHeader(request, httpServletResponse, responseEntity.getHeaders());
         httpServletResponse.setStatus(responseEntity.getStatusCode().value());
         sessionConnection.updateActivity();
         return response;
     }
 
 
-
     private void checkSessionConection(HttpSession session) {
         sessionConnection.setjSessionId(session.getId());
         if (sessionConnection.getNode() == null || !sessionConnection.getNode().isCanBeUsed()) {
-            sessionConnection.setNode(loadBalancerHelper.getAvailibleNode());
-            log.debug("Node {} was given to {}", sessionConnection.getNode().getUrl(), sessionConnection.getjSessionId());
-            log.debug("Node {} has  {} connections {}", sessionConnection.getNode().getUrl(), sessionConnection.getNode().getConnectionCount(), sessionConnection.getNode().getConnections());
+            Node availibleNode = loadBalancerHelper.getAvailibleNode();
+            if (availibleNode != null) {
+                sessionConnection.setNode(availibleNode);
+                log.debug("Node {} was given to {}", sessionConnection.getNode().getUrl(), sessionConnection.getjSessionId());
+                log.debug("Node {} has  {} connections {}", sessionConnection.getNode().getUrl(), sessionConnection.getNode().getConnectionCount(), sessionConnection.getNode().getConnections());
+            }
         }
     }
 
@@ -84,21 +90,21 @@ public class MainController {
         if (configs.isDebugMode()) {
             byte[] debugHeader =
                     ("<link rel=\"stylesheet\" type=\"text/css\" href=\"/stlb/bower_components/normalize-css/normalize.css\"/>\n" +
-                    "        <link rel=\"stylesheet\" type=\"text/css\" href=\"/stlb/bower_components/semantic/dist/semantic.css\"/>" +
-                    "<div class=\"ui message\">\n" +
-                    "<div class=\"header\">" +
-                    "Debug Info" +
-                    "</div>" +
-                    " <ul class=\"list\">" +
-                    "<li>" + request.getRequestURL() + "?" + request.getQueryString() + "</li>" +
-                    "<li>Node: " + sessionConnection.getNode().getUrl() + "</li>" +
-                    "<li>Full request url" + sessionConnection.getNode().getUrl() + request.getRequestURI() + "</li>" +
-                    "</ul>\n" +
-                    "</div>").getBytes();
+                            "        <link rel=\"stylesheet\" type=\"text/css\" href=\"/stlb/bower_components/semantic/dist/semantic.css\"/>" +
+                            "<div class=\"ui message\">\n" +
+                            "<div class=\"header\">" +
+                            "Debug Info" +
+                            "</div>" +
+                            " <ul class=\"list\">" +
+                            "<li>" + request.getRequestURL() + "?" + request.getQueryString() + "</li>" +
+                            "<li>Node: " + sessionConnection.getNode().getUrl() + "</li>" +
+                            "<li>Full request url" + sessionConnection.getNode().getUrl() + request.getRequestURI() + "</li>" +
+                            "</ul>\n" +
+                            "</div>").getBytes();
 
             byte[] result = new byte[debugHeader.length + response.length];
-            System.arraycopy(debugHeader,0,result,0,debugHeader.length);
-            System.arraycopy(response,0,result,debugHeader.length,response.length);
+            System.arraycopy(debugHeader, 0, result, 0, debugHeader.length);
+            System.arraycopy(response, 0, result, debugHeader.length, response.length);
             return result;
         }
 

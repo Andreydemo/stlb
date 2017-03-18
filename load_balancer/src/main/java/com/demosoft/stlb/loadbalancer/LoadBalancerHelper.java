@@ -60,14 +60,19 @@ public class LoadBalancerHelper {
     }
 
     public ResponseEntity<byte[]> getBytes(HttpServletRequest httpRequest, SessionConnection connection) throws ResourceAccessException {
-        HttpHeaders headers = new HttpHeaders();
-        headers.setAccept(Arrays.asList(MediaType.TEXT_HTML));
-        headers.setContentType(MediaType.TEXT_HTML);
-        putCorrectSessionIdToHeadrs(headers, connection);
-        HttpEntity<byte[]> entity = new HttpEntity<>("parameters".getBytes(), headers);
-        ResponseEntity<byte[]> response = restTemplate.exchange(connection.getNode().getUrl() + httpRequest.getRequestURI(), HttpMethod.GET, entity, byte[].class);
-        processJSessionIdAfterRequest(response, connection);
-        return response;
+        try {
+            HttpHeaders headers = new HttpHeaders();
+            headers.setAccept(Arrays.asList(MediaType.TEXT_HTML));
+            headers.setContentType(MediaType.TEXT_HTML);
+            putCorrectSessionIdToHeadrs(headers, connection);
+            HttpEntity<byte[]> entity = new HttpEntity<>("parameters".getBytes(), headers);
+            ResponseEntity<byte[]> response = restTemplate.exchange(connection.getNode().getUrl() + httpRequest.getRequestURI(), HttpMethod.GET, entity, byte[].class);
+            processJSessionIdAfterRequest(response, connection);
+            return response;
+        } catch (Throwable e) {
+            System.err.println(e);
+            return new ResponseEntity<>(new byte[0], HttpStatus.OK);
+        }
     }
 
     public ResponseEntity<String> post(HttpServletRequest httpRequest, SessionConnection connection) {
@@ -76,7 +81,7 @@ public class LoadBalancerHelper {
         //headers.setContentType(MediaType.TEXT_HTML);
         headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
         // headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
-        preHeadersCompilation(httpRequest,headers);
+        preHeadersCompilation(httpRequest, headers);
         putCorrectSessionIdToHeadrs(headers, connection);
 
         MultiValueMap<String, String> body = new LinkedMultiValueMap<String, String>();
@@ -98,7 +103,7 @@ public class LoadBalancerHelper {
 
         while (headerNames.hasMoreElements()) {
             String headerName = headerNames.nextElement();
-            Enumeration<String> headerValues =  httpReques.getHeaders(headerName);
+            Enumeration<String> headerValues = httpReques.getHeaders(headerName);
             boolean firtsValue = true;
             while (headerValues.hasMoreElements()) {
                 String headerValue = headerValues.nextElement();
@@ -175,10 +180,11 @@ public class LoadBalancerHelper {
         return nodes.get(0);
     }
 
-    public List<Node> getNodesInCriticalState(){
+    public List<Node> getNodesInCriticalState() {
         return nodeConfigsConteiner.getAvailbleNodes().stream().filter(node -> node.isInCriticalState()).collect(Collectors.toList());
     }
-    public List<Node> getNodeInNormalState(){
+
+    public List<Node> getNodeInNormalState() {
         return nodeConfigsConteiner.getAvailbleNodes().stream().filter(node -> !node.isInCriticalState()).collect(Collectors.toList());
     }
 
@@ -226,8 +232,8 @@ public class LoadBalancerHelper {
         return "";
     }
 
-    public void reassignSessionForNode(SessionConnection sessionConnection, Node node){
-        if(node == null) {
+    public void reassignSessionForNode(SessionConnection sessionConnection, Node node) {
+        if (node == null) {
             return;
         }
         sessionConnection.setLocked(true);
@@ -239,43 +245,41 @@ public class LoadBalancerHelper {
             node.addConnection(sessionConnection);
             getNewSessionConnectionForNode(sessionConnection, node);
             setSessionData(sessionConnection, sessionDataBody);
-        } catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         } finally {
             sessionConnection.setLocked(false);
         }
     }
 
-    public void getNewSessionConnectionForNode(SessionConnection sessionConnection,Node node){
+    public void getNewSessionConnectionForNode(SessionConnection sessionConnection, Node node) {
         HttpHeaders headers = new HttpHeaders();
         headers.setAccept(Arrays.asList(MediaType.TEXT_HTML));
         headers.setContentType(MediaType.TEXT_HTML);
         HttpEntity<String> entity = new HttpEntity<String>("parameters", headers);
-        ResponseEntity<String> response = restTemplate.exchange(node.getUrl() , HttpMethod.GET, entity, String.class);
+        ResponseEntity<String> response = restTemplate.exchange(node.getUrl(), HttpMethod.GET, entity, String.class);
         processJSessionIdAfterRequest(response, sessionConnection);
     }
 
-    public String getSessionData(SessionConnection sessionConnection){
+    public String getSessionData(SessionConnection sessionConnection) {
         HttpHeaders headers = new HttpHeaders();
-        headers.setAccept(Arrays.asList(MediaType.TEXT_HTML,MediaType.APPLICATION_JSON));
+        headers.setAccept(Arrays.asList(MediaType.TEXT_HTML, MediaType.APPLICATION_JSON));
         headers.setContentType(MediaType.TEXT_HTML);
-        putCorrectSessionIdToHeadrs(headers,sessionConnection);
+        putCorrectSessionIdToHeadrs(headers, sessionConnection);
         HttpEntity<String> entity = new HttpEntity<String>("parameters", headers);
-        ResponseEntity<String> response = restTemplate.exchange(sessionConnection.getNode().getUrl()+"/admin/stlb/getSessionBean" , HttpMethod.GET, entity, String.class);
-        return  response.getBody();
+        ResponseEntity<String> response = restTemplate.exchange(sessionConnection.getNode().getUrl() + "/admin/stlb/getSessionBean", HttpMethod.GET, entity, String.class);
+        return response.getBody();
     }
 
-    public void setSessionData(SessionConnection sessionConnection,String body){
+    public void setSessionData(SessionConnection sessionConnection, String body) {
         HttpHeaders headers = new HttpHeaders();
         headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
         headers.setContentType(MediaType.APPLICATION_JSON);
-        putCorrectSessionIdToHeadrs(headers,sessionConnection);
+        putCorrectSessionIdToHeadrs(headers, sessionConnection);
         HttpEntity<String> entity = new HttpEntity<String>(body, headers);
-        ResponseEntity<String> response = restTemplate.exchange(sessionConnection.getNode().getUrl()+"/admin/stlb/setSessionBean" , HttpMethod.POST, entity, String.class);
+        ResponseEntity<String> response = restTemplate.exchange(sessionConnection.getNode().getUrl() + "/admin/stlb/setSessionBean", HttpMethod.POST, entity, String.class);
         sessionConnection.setDataBroked(Boolean.parseBoolean(response.getBody()));
     }
-
-
 
 
 }
