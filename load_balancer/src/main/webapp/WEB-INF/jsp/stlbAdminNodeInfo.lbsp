@@ -120,7 +120,13 @@
             <tr>
                 <td class="left aligned">Activity point </td>
                 <td class="left aligned">
-                  ${node.nodeActivityPoints} / 150
+                  ${node.currentNodeActivityPoint} / 100
+                </td>
+            </tr>
+           <tr>
+                <td class="left aligned">Activity point </td>
+                <td class="left aligned">
+                  ${node.maxNodeActivityPoint}
                 </td>
             </tr>
             <tr>

@@ -1,5 +1,6 @@
 package com.demosoft.stlb.store.controller;
 
+import com.demosoft.stlb.client.annotation.PerformanceMonitor;
 import com.demosoft.stlb.store.ProductService;
 import com.demosoft.stlb.store.entity.Product;
 import com.demosoft.stlb.store.entity.ShoppingCart;
@@ -29,6 +30,7 @@ public class StoreController {
         return "shopIndex";
     }
 
+    @PerformanceMonitor
     @RequestMapping(value = "/catalog", method = RequestMethod.GET)
     public String catalog(Model model){
         model.addAttribute("products",productService.getAllProducts());
@@ -36,6 +38,7 @@ public class StoreController {
         return "catalog";
     }
 
+    @PerformanceMonitor
     @RequestMapping(value = "/catalog", method = RequestMethod.POST)
     public String addToCart (@RequestParam("productId") String productId , @RequestParam("quantity") String quantity,
                              Model model) {
@@ -58,6 +61,8 @@ public class StoreController {
 
         return "redirect:catalog";
     }
+    
+    @PerformanceMonitor
     @RequestMapping(value = "/checkout", method = RequestMethod.GET)
     public String checkout(Model model){
         model.addAttribute("cart",shoppingCart);

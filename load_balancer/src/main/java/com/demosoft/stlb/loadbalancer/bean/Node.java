@@ -28,6 +28,9 @@ public class Node {
     private boolean mockUsed = false;
     private MockedNode mockedNode = new MockedNode(this);
 
+    private double maxNodeActivityPoint = 0;
+    private double currentNodeActivityPoint = 0;
+
 
     private List<WeakReference<SessionConnection>> connections = new ArrayList<WeakReference<SessionConnection>>();
 
@@ -235,12 +238,28 @@ public class Node {
             }
             boolean result = systemReports.add(systemReport);
             Collections.sort(systemReports, SystemReport.defaultComporator);
-
+            calculateNodeActivityPoints();
             return result;
         }
     }
 
-    public Double getNodeActivityPoints(){
+    public double getCurrentNodeActivityPoint() {
+        return currentNodeActivityPoint;
+    }
+
+    public void setCurrentNodeActivityPoint(double currentNodeActivityPoint) {
+        this.currentNodeActivityPoint = currentNodeActivityPoint;
+    }
+
+    public double getMaxNodeActivityPoint() {
+        return maxNodeActivityPoint;
+    }
+
+    public void setMaxNodeActivityPoint(double maxNodeActivityPoint) {
+        this.maxNodeActivityPoint = maxNodeActivityPoint;
+    }
+
+    public Double calculateNodeActivityPoints(){
         synchronized (this){
             if(mockUsed){
                 return  mockedNode.getMockedActivityPoints();
@@ -255,7 +274,16 @@ public class Node {
             cpuLoad/=systemReports.size();
             memoryLoad/=systemReports.size();
 
-            return cpuLoad + memoryLoad / 1.5;
+            double result = (cpuLoad + memoryLoad) / 2;
+            currentNodeActivityPoint = result;
+            checkMaxNodeActivityPoint();
+            return result;
+        }
+    }
+
+    private void checkMaxNodeActivityPoint() {
+        if(currentNodeActivityPoint > maxNodeActivityPoint){
+            maxNodeActivityPoint = currentNodeActivityPoint;
         }
     }
 
@@ -332,14 +360,14 @@ public class Node {
         if(criticalLevel.equals(-1.0)){
             return false;
         }
-        return getNodeActivityPoints() >= criticalLevel;
+        return getCurrentNodeActivityPoint() >= criticalLevel;
     }
 
     public static class CriticalComporator implements Comparator<Node>{
 
         @Override
         public int compare(Node o1, Node o2) {
-            return o1.getNodeActivityPoints() < o2.getNodeActivityPoints() ? 1 : 0;
+            return o1.getCurrentNodeActivityPoint() < o2.getCurrentNodeActivityPoint() ? 1 : 0;
         }
     }
 }

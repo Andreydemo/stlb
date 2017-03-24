@@ -9,7 +9,7 @@ import java.util.Date;
  * Created by Andrii_Korkoshko on 15.10.2015.
  */
 public class SystemReport {
-    public static final SystemReportComporator defaultComporator = new SystemReportComporator();
+    public static final SystemReportComparator defaultComporator = new SystemReportComparator();
 
     private Double processCpuLoad;
     private Double systemCpuLoad;
@@ -80,7 +80,7 @@ public class SystemReport {
         this.reportDate = reportDate;
     }
 
-    static class SystemReportComporator implements Comparator<SystemReport> {
+    static class SystemReportComparator implements Comparator<SystemReport> {
 
         @Override
         public int compare(SystemReport o1, SystemReport o2) {
