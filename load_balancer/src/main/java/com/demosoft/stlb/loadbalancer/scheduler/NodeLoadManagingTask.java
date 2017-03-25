@@ -1,18 +1,12 @@
 package com.demosoft.stlb.loadbalancer.scheduler;
 
-import com.demosoft.stlb.client.bean.STLBRequest;
-import com.demosoft.stlb.client.bean.SessionBean;
-import com.demosoft.stlb.client.controller.PerformanceController;
 import com.demosoft.stlb.loadbalancer.LoadBalancerHelper;
-import com.demosoft.stlb.loadbalancer.bean.Configs;
 import com.demosoft.stlb.loadbalancer.bean.Node;
 import com.demosoft.stlb.loadbalancer.bean.NodeConfigsConteiner;
 import com.demosoft.stlb.loadbalancer.bean.SessionConnection;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import javax.management.*;
-import java.lang.management.ManagementFactory;
 import java.util.*;
 
 /**
@@ -54,7 +48,7 @@ public class NodeLoadManagingTask {
             if(!normalNodesIterator.hasNext()){
                 normalNodesIterator  = normalNodes.iterator();
             }
-            SessionConnection sessionConnection = criticalNode.getMostActiveSession();
+            SessionConnection sessionConnection = criticalNode.calculateMostActiveSession();
             if(sessionConnection != null){
                 loadBalancerHelper.reassignSessionForNode(sessionConnection,normalNodesIterator.next());
             }

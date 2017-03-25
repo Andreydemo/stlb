@@ -31,8 +31,14 @@ public class Node {
     private double maxNodeActivityPoint = 0;
     private double currentNodeActivityPoint = 0;
 
+    private long receivedBites = 0;
+
+    private SessionConnection currentMostActiveSession;
+
+    private List<Long> balancerDelayes = new ArrayList<>();
 
     private List<WeakReference<SessionConnection>> connections = new ArrayList<WeakReference<SessionConnection>>();
+    private long currentAverageBalancerDelay;
 
     public Node() {
         name = "Node";
@@ -83,16 +89,16 @@ public class Node {
 
     public void addConnection(SessionConnection connection) {
         filterConncections();
-        if(containsConnection(connection)){
+        if (containsConnection(connection)) {
             return;
         }
         WeakReference<SessionConnection> reference = new WeakReference<SessionConnection>(connection);
         connections.add(reference);
     }
 
-    public boolean containsConnection(SessionConnection connection){
-        for(WeakReference<SessionConnection> weakReference : connections){
-            if(weakReference.get() != null && weakReference.get().getNodeJSessionId() != null &&weakReference.get().getNodeJSessionId().equalsIgnoreCase(connection.getNodeJSessionId())){
+    public boolean containsConnection(SessionConnection connection) {
+        for (WeakReference<SessionConnection> weakReference : connections) {
+            if (weakReference.get() != null && weakReference.get().getNodeJSessionId() != null && weakReference.get().getNodeJSessionId().equalsIgnoreCase(connection.getNodeJSessionId())) {
                 return true;
             }
         }
@@ -118,14 +124,14 @@ public class Node {
         return connections;
     }
 
-    public SessionConnection getConnectionByNodeSeesionId(String sessionId){
+    public SessionConnection getConnectionByNodeSeesionId(String sessionId) {
         filterConncections();
-        for(WeakReference<SessionConnection> connection : connections){
-            if(sessionId.equalsIgnoreCase(connection.get().getNodeJSessionId())){
+        for (WeakReference<SessionConnection> connection : connections) {
+            if (sessionId.equalsIgnoreCase(connection.get().getNodeJSessionId())) {
                 return connection.get();
             }
         }
-        return  null;
+        return null;
     }
 
     public void filterConncections() {
@@ -239,6 +245,7 @@ public class Node {
             boolean result = systemReports.add(systemReport);
             Collections.sort(systemReports, SystemReport.defaultComporator);
             calculateNodeActivityPoints();
+            currentMostActiveSession = calculateMostActiveSession();
             return result;
         }
     }
@@ -259,20 +266,20 @@ public class Node {
         this.maxNodeActivityPoint = maxNodeActivityPoint;
     }
 
-    public Double calculateNodeActivityPoints(){
-        synchronized (this){
-            if(mockUsed){
-                return  mockedNode.getMockedActivityPoints();
+    public Double calculateNodeActivityPoints() {
+        synchronized (this) {
+            if (mockUsed) {
+                return mockedNode.getMockedActivityPoints();
             }
             Double cpuLoad = 0.0;
             Double memoryLoad = 0.0;
-            for(SystemReport systemReport: systemReports){
+            for (SystemReport systemReport : systemReports) {
                 cpuLoad += systemReport.getSystemCpuLoad();
                 memoryLoad += (systemReport.getTotalPhysicalMemorySize() - systemReport.getFreePhysicalMemorySize())
                         / systemReport.getTotalPhysicalMemorySize();
             }
-            cpuLoad/=systemReports.size();
-            memoryLoad/=systemReports.size();
+            cpuLoad /= systemReports.size();
+            memoryLoad /= systemReports.size();
 
             double result = (cpuLoad + memoryLoad) / 2;
             currentNodeActivityPoint = result;
@@ -282,22 +289,31 @@ public class Node {
     }
 
     private void checkMaxNodeActivityPoint() {
-        if(currentNodeActivityPoint > maxNodeActivityPoint){
+        if (currentNodeActivityPoint > maxNodeActivityPoint) {
             maxNodeActivityPoint = currentNodeActivityPoint;
         }
     }
 
-    public SessionConnection getMostActiveSession(){
-        if(getStrongConnections().isEmpty()){
+    public SessionConnection calculateMostActiveSession() {
+        if (getStrongConnections().isEmpty()) {
             return null;
         }
         SessionConnection result = getStrongConnections().get(0);
-        for(SessionConnection sessionConnection : getStrongConnections()){
-            if(result.getActivity() < sessionConnection.getActivity()){
+        for (SessionConnection sessionConnection : getStrongConnections()) {
+            if (result.getActivity() < sessionConnection.getActivity()) {
                 result = sessionConnection;
             }
         }
+        currentMostActiveSession = result;
         return result;
+    }
+
+    public SessionConnection getCurrentMostActiveSession() {
+        return currentMostActiveSession;
+    }
+
+    public void setCurrentMostActiveSession(SessionConnection currentMostActiveSession) {
+        this.currentMostActiveSession = currentMostActiveSession;
     }
 
     public int getMaxCountSavedSystemReports() {
@@ -340,15 +356,15 @@ public class Node {
         this.mockedNode = mockedNode;
     }
 
-    public void swithcMockStatus(){
+    public void swithcMockStatus() {
         mockUsed = !mockUsed;
     }
 
-    public boolean removeSessionConnection(SessionConnection  sessionConnection){
+    public boolean removeSessionConnection(SessionConnection sessionConnection) {
         boolean result = false;
         List<WeakReference<SessionConnection>> refsToRemove = new ArrayList<>();
-        for(WeakReference<SessionConnection> sessionConnectionWeakReference : connections){
-            if(sessionConnectionWeakReference.get() != null && sessionConnectionWeakReference.get().getNodeJSessionId().equalsIgnoreCase(sessionConnection.getNodeJSessionId())){
+        for (WeakReference<SessionConnection> sessionConnectionWeakReference : connections) {
+            if (sessionConnectionWeakReference.get() != null && sessionConnectionWeakReference.get().getNodeJSessionId().equalsIgnoreCase(sessionConnection.getNodeJSessionId())) {
                 refsToRemove.add(sessionConnectionWeakReference);
             }
         }
@@ -356,18 +372,52 @@ public class Node {
         return result;
     }
 
-    public boolean isInCriticalState (){
-        if(criticalLevel.equals(-1.0)){
+    public boolean isInCriticalState() {
+        if (criticalLevel.equals(-1.0)) {
             return false;
         }
         return getCurrentNodeActivityPoint() >= criticalLevel;
     }
 
-    public static class CriticalComporator implements Comparator<Node>{
+    public static class CriticalComporator implements Comparator<Node> {
 
         @Override
         public int compare(Node o1, Node o2) {
             return o1.getCurrentNodeActivityPoint() < o2.getCurrentNodeActivityPoint() ? 1 : 0;
         }
+    }
+
+    public void addBites(int bites) {
+        receivedBites += bites;
+    }
+
+    public long getReceivedBites() {
+        return receivedBites;
+    }
+
+    public void addBalancerDelay(Long delay) {
+        synchronized (this) {
+            if (balancerDelayes.size() == maxCountSavedSystemReports) {
+                balancerDelayes.remove(maxCountSavedSystemReports - 1);
+            }
+            balancerDelayes.add(delay);
+            calculateCurrentAverageBalancerDelay();
+        }
+    }
+
+    private void calculateCurrentAverageBalancerDelay() {
+        long bufDelay = 0;
+        for (Long delay : balancerDelayes) {
+            bufDelay += delay;
+        }
+        currentAverageBalancerDelay = bufDelay / balancerDelayes.size();
+    }
+
+    public long getCurrentAverageBalancerDelay() {
+        return currentAverageBalancerDelay;
+    }
+
+    public void setCurrentAverageBalancerDelay(long currentAverageBalancerDelay) {
+        this.currentAverageBalancerDelay = currentAverageBalancerDelay;
     }
 }

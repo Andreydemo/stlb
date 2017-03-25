@@ -165,6 +165,38 @@
                     </form>
                 </td>
             </tr>
+            <tr>
+                <td class="left aligned">Received Bites</td>
+                <td class="left aligned">
+                    <c:if test="${node.receivedBites < 1024}">
+                        ${node.receivedBites} b
+                    </c:if>
+                    <c:if test="${node.receivedBites >= 1024 && node.receivedBites < (1024 * 1024)}">
+                        ${node.receivedBites / 1024} Kb
+                    </c:if>
+                    <c:if test="${node.receivedBites >= (1024 * 1024) && node.receivedBites < (1024 * 1024 * 1024)}">
+                        ${node.receivedBites / (1024 * 1024)} Mb
+                    </c:if>
+                    <c:if test="${node.receivedBites > (1024 * 1024 * 1024)}">
+                        ${node.receivedBites / (1024 * 1024 * 1024}} Gb
+                    </c:if>
+                </td>
+            </tr>
+            <tr>
+                <td class="left aligned">current Average Balancer Delay</td>
+                <td class="left aligned">
+                    ${node.currentAverageBalancerDelay} milli seconds
+                </td>
+            </tr>
+
+            <tr>
+                <td class="left aligned">Most active session </td>
+                <td class="left aligned">
+                    <c:if test="${not empty node.currentMostActiveSession}">
+                        ${node.currentMostActiveSession.activity} / 10 000
+                    </c:if>
+                </td>
+            </tr>
             </tbody>
         </table>
         <c:if test="${node.connectionsCount > 0}">

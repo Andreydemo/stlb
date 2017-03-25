@@ -41,21 +41,42 @@ public class MainController {
     @RequestMapping(method = RequestMethod.GET)
     @ResponseBody
     private byte[] processGetRequest(HttpSession session, HttpServletRequest request) throws ResourceAccessException, InterruptedException {
+        long bufTime = 0;
+        long delay = 0;
+        if (configs.isDeepStatistic()) {
+            bufTime = System.currentTimeMillis();
+        }
         checkSessionConection(session);
         request.getServletContext().getServletRegistrations();
         if (sessionConnection.getNode() == null) {
             return generateResponseHtml(request, "NODE not found".getBytes());
         }
-        log.debug("GET call for {} node for path {}", sessionConnection.getNode().getUrl(), request.getRequestURI());
+        Node node = sessionConnection.getNode();
+        log.debug("GET call for {} node for path {}", node.getUrl(), request.getRequestURI());
         while (sessionConnection.isLocked()) {
             Thread.sleep(100);
         }
-        /*String response = loadBalancerHelper.get(request, sessionConnection).getBody();
+        if (configs.isDeepStatistic()) {
+            delay +=  System.currentTimeMillis() - bufTime;
+        }
+        byte[] respondBody = loadBalancerHelper.getBytes(request, sessionConnection).getBody();
+        if (configs.isDeepStatistic()) {
+            bufTime = System.currentTimeMillis();
+        }
+        if (configs.isDeepStatistic()) {
+            bufTime += System.nanoTime() - bufTime;
+            node.addBalancerDelay(bufTime);
+        }
+        if (configs.isDeepStatistic()) {
+            node.addBites(respondBody.length);
+        }
         sessionConnection.updateActivity();
-        return generateResponseHtml(request, response).getBytes(StandardCharsets.UTF_8);*/
-        byte[] responeBody = loadBalancerHelper.getBytes(request, sessionConnection).getBody();
-        sessionConnection.updateActivity();
-        return generateResponseHtml(request, responeBody);
+        byte[] bytes = generateResponseHtml(request, respondBody);
+        if (configs.isDeepStatistic()) {
+            delay += System.nanoTime() - bufTime;
+            node.addBalancerDelay(delay);
+        }
+        return bytes;
     }
 
     @RequestMapping(value = "/**", method = RequestMethod.POST)
